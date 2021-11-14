@@ -1,0 +1,25 @@
+server:
+  port: 9966
+spring:
+  application:
+    name: cs-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/clusters-stars/config-center
+          username: 2223745240@qq.com
+          password: wxt0915wxt
+          search-paths:
+            - config-center
+          default-label: master
+          clone-on-start: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
