@@ -15,7 +15,7 @@ spring:
     name: cs-user-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://106.75.66.14/:3307/cscustomer?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://106.75.66.14:3307/cscustomer?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: molin
     password: cmlwxt1231
 eureka:
