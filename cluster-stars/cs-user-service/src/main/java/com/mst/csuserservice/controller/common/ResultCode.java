@@ -1,4 +1,4 @@
-package com.mst.csuserservice.common;
+package com.mst.csuserservice.controller.common;
 
 /**
  * @author Molin

@@ -1,7 +1,7 @@
-package com.mst.csuserservice.component;
+package com.mst.csuserservice.controller.component;
 
-import com.mst.csuserservice.common.IResultCode;
-import com.mst.csuserservice.common.ResultCode;
+import com.mst.csuserservice.controller.common.IResultCode;
+import com.mst.csuserservice.controller.common.ResultCode;
 import lombok.Getter;
 
 /**
