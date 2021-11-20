@@ -18,11 +18,27 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @RestControllerAdvice(basePackages = {"com.mst.csuserservice.controller"})
 public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {
 
+    /**
+     * 支持增强判断方法
+     * @param  returnType   方法的返回值类型
+     * @param  convertType  待转换类型
+     * @return boolean      true：不执行beforeBodyWrite方法, false：执行beforeBodyWrite方法
+     */
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> convertType) {
-        return !returnType.getGenericParameterType().equals(ResultVO.class);
+        return returnType.getGenericParameterType().equals(ResultVO.class);
     }
 
+    /**
+     * 增强方法
+     * @param   data                  容器内部数据
+     * @param   returnType            返回值类型
+     * @param   selectedContentType   可选择的内容类型
+     * @param   selectedConvertType   可选择的转换类型
+     * @param   request               Servlet请求
+     * @param   response              Servlet响应
+     * @return  Object                利用继承多态特性，返回公共父类
+     */
     @Override
     public Object beforeBodyWrite(Object data, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConvertType, ServerHttpRequest request, ServerHttpResponse response) {
         // 字符串类型需要特殊处理
