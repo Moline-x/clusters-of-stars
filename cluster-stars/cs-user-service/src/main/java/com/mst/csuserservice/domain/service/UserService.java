@@ -1,6 +1,7 @@
 package com.mst.csuserservice.domain.service;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
+import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.domain.model.User;
 
 /**
@@ -12,10 +13,10 @@ public interface UserService {
 
     /**
      * 注册.
-     * @param   user  user
+     * @param   userCreateCommand  create user command
      * @return  User
      */
-    User register(User user);
+    User register(UserCreateCommand userCreateCommand);
 
     /**
      * 登录.

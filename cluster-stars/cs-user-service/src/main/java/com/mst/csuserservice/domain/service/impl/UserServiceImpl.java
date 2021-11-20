@@ -4,6 +4,7 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.constant.UserConstant;
+import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.domain.enums.UserState;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.repository.UserRepository;
@@ -28,14 +29,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 注册.
-     * @param   user  user
+     * @param   userCreateCommand  create user command
      * @return  User
      */
     @Override
-    public User register(User user) {
-        user.setSalt(UserConstant.PWD_SALT);
-        user.setPassword(SaSecureUtil.md5BySalt(user.getPassword(), user.getSalt()));
-        user.setState(UserState.ENABLED);
+    public User register(UserCreateCommand userCreateCommand) {
+        User user = User.builder().name(userCreateCommand.getName())
+                .mobile(userCreateCommand.getMobile())
+                .salt(UserConstant.PWD_SALT)
+                .password(SaSecureUtil.md5BySalt(userCreateCommand.getPassword(), UserConstant.PWD_SALT))
+                .state(UserState.ENABLED).build();
         return userRepository.saveUser(user);
     }
 

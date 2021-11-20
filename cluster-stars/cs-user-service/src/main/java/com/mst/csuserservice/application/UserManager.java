@@ -2,6 +2,7 @@ package com.mst.csuserservice.application;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import com.mst.csuserservice.application.DTO.UserDTO;
+import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.service.UserService;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,9 @@ public class UserManager {
      * @return UserDTO
      */
     @Transactional(rollbackFor = Exception.class)
-    public UserDTO register(User user) {
+    public UserDTO register(UserCreateCommand userCreateCommand) {
         UserDTO userDTO = new UserDTO();
-        User register = userService.register(user);
+        User register = userService.register(userCreateCommand);
         if (register == null) {
             userDTO.setMsg(false);
             return userDTO;

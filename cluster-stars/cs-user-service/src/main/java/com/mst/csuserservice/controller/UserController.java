@@ -4,7 +4,9 @@ import com.mst.csuserservice.application.DTO.UserDTO;
 import com.mst.csuserservice.application.UserManager;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.component.ResultVO;
-import com.mst.csuserservice.domain.model.User;
+import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +29,12 @@ public class UserController {
 
     /**
      * 注册.
-     * @param  user  user
+     * @param  userCreateCommand  create user command
      * @return ResultVO
      */
     @PostMapping("/register")
-    public ResultVO<UserDTO> register(@RequestBody User user) {
-        UserDTO register = userManager.register(user);
+    public ResultVO<UserDTO> register(@RequestBody UserCreateCommand userCreateCommand) {
+        UserDTO register = userManager.register(userCreateCommand);
         if (Boolean.FALSE.equals(register.getMsg())) {
             return ResultVO.validateFailed(UserConstant.REGISTER_FAILED);
         }
@@ -41,12 +43,12 @@ public class UserController {
 
     /**
      * 登陆.
-     * @param  user  user
+     * @param  userLoginQuery  user login query
      * @return ResultVO
      */
     @PostMapping("/login")
-    public ResultVO<UserDTO> login(@RequestBody User user) {
-        UserDTO login = userManager.login(user.getName(), user.getPassword());
+    public ResultVO<UserDTO> login(@RequestBody UserLoginQuery userLoginQuery) {
+        UserDTO login = userManager.login(userLoginQuery.getName(), userLoginQuery.getPassword());
         if (Boolean.FALSE.equals(login.getMsg())) {
             return ResultVO.validateFailed(UserConstant.WRONG_NAME_PWD);
         }
