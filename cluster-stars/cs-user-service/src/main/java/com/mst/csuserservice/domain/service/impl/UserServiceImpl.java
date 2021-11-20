@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.enums.UserState;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.repository.UserRepository;
@@ -44,17 +45,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 登录.
-     * @param   username  username
-     * @param   password  password
+     * @param   userLoginQuery  login user query
      * @return  SaTokenInfo
      */
     @Override
-    public SaTokenInfo login(String username, String password) {
+    public SaTokenInfo login(UserLoginQuery userLoginQuery) {
         SaTokenInfo saTokenInfo = null;
         // 当前密码加密
-        String secretKey = SaSecureUtil.md5BySalt(password, UserConstant.PWD_SALT);
+        String secretKey = SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT);
         // 根据用户名和密码查找用户.
-        Optional<User> userOption = userRepository.findByNameAndPassword(username, secretKey);
+        Optional<User> userOption = userRepository.findByNameAndPassword(userLoginQuery.getName(), secretKey);
         // 如果用户存在
         if (userOption.isPresent()) {
             // 获取当前用户

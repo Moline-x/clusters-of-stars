@@ -2,6 +2,7 @@ package com.mst.csuserservice.domain.service;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.model.User;
 
 /**
@@ -20,9 +21,8 @@ public interface UserService {
 
     /**
      * 登录.
-     * @param   username  username
-     * @param   password  password
+     * @param   userLoginQuery  login user query
      * @return  SaTokenInfo
      */
-    SaTokenInfo login(String username, String password);
+    SaTokenInfo login(UserLoginQuery userLoginQuery);
 }

@@ -7,6 +7,9 @@ package com.mst.csuserservice.constant;
  */
 public final class UserConstant {
 
+    private UserConstant() {
+    }
+
     /**
      * 密码加盐.
      */
@@ -43,4 +46,8 @@ public final class UserConstant {
      * 用户状态常量——禁用.
      */
     public static final int DISABLE_CODE = 0;
+    /**
+     * tokenMap初始化容量.
+     */
+    public static final int TOKEN_MAP_CAPACITY = 6;
 }

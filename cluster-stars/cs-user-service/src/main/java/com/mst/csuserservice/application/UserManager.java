@@ -3,13 +3,12 @@ package com.mst.csuserservice.application;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import com.mst.csuserservice.application.DTO.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.service.UserService;
+import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Molin
@@ -27,41 +26,26 @@ public class UserManager {
 
     /**
      * 注册.
-     * @param  user  user
+     * @param  userCreateCommand  create user command
      * @return UserDTO
      */
     @Transactional(rollbackFor = Exception.class)
     public UserDTO register(UserCreateCommand userCreateCommand) {
-        UserDTO userDTO = new UserDTO();
+        // 启动用户领域服务完成注册.
         User register = userService.register(userCreateCommand);
-        if (register == null) {
-            userDTO.setMsg(false);
-            return userDTO;
-        }
-        userDTO.setUser(register);
-        userDTO.setMsg(true);
-        return userDTO;
+        // 根据注册结果响应.
+        return UserDtoFactory.newUserDtoForRegister(register);
     }
 
     /**
      * 登陆.
-     * @param  username  username
-     * @param  password  password
+     * @param  userLoginQuery  login query user
      * @return UserDTO
      */
-    public UserDTO login(String username, String password) {
-        UserDTO userDTO = new UserDTO();
-        SaTokenInfo tokenInfo = userService.login(username, password);
-        if (tokenInfo == null) {
-            userDTO.setMsg(false);
-            return userDTO;
-        }
-        Map<String, String> tokenMap = new HashMap<>(6);
-        tokenMap.put("token", tokenInfo.getTokenValue());
-        tokenMap.put("tokenHead", tokenInfo.getTokenName());
-        tokenMap.put("loginId", String.valueOf(tokenInfo.getLoginId()));
-        userDTO.setTokenMap(tokenMap);
-        userDTO.setMsg(true);
-        return userDTO;
+    public UserDTO login(UserLoginQuery userLoginQuery) {
+        // 启动用户领域服务完成登录.
+        SaTokenInfo tokenInfo = userService.login(userLoginQuery);
+        // 响应登录结果.
+        return UserDtoFactory.newUserDtoForLogin(tokenInfo);
     }
 }
