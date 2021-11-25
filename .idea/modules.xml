@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/cluster-stars/cluster-stars.iml" filepath="$PROJECT_DIR$/cluster-stars/cluster-stars.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-config/cs-config.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-config/cs-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-eureka/cs-eureka.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-eureka/cs-eureka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-gateway/cs-gateway.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-gateway/cs-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-user-service/cs-user-service.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-user-service/cs-user-service.iml" />
+    </modules>
+  </component>
+</project>
