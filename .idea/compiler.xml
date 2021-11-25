@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cs-eureka" />
+        <module name="cs-config" />
+        <module name="cs-gateway" />
+        <module name="cs-user-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cluster-stars" target="11" />
+      <module name="cs-config" target="11" />
+      <module name="cs-eureka" target="11" />
+      <module name="cs-gateway" target="11" />
+      <module name="cs-user-service" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cs-config" options="-parameters" />
+      <module name="cs-eureka" options="-parameters" />
+      <module name="cs-gateway" options="-parameters" />
+      <module name="cs-user-service" options="-parameters" />
+    </option>
+  </component>
+</project>
