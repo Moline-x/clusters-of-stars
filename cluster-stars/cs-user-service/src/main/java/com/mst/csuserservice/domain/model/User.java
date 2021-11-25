@@ -7,6 +7,7 @@ import com.mst.csuserservice.domain.enums.UserState;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import java.util.Objects;
  * @date   2021-11-19  22:30
  * 用户实体
  */
+@Proxy(lazy = false)
 @Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor

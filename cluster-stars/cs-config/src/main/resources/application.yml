@@ -8,8 +8,8 @@ spring:
       server:
         git:
           uri: https://gitee.com/clusters-stars/config-center
-          username:
-          password:
+          username: 2223745240@qq.com
+          password: wxt0915wxt
           search-paths:
             - config-center
           default-label: master
@@ -17,7 +17,8 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:7001/eureka
+      # defaultZone: http://localhost:7001/eureka      dev
+      defaultZone: http://106.75.66.14:7001/eureka
     register-with-eureka: true
     fetch-registry: true
   instance:
