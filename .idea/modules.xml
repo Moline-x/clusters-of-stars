@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cluster-stars.iml" filepath="$PROJECT_DIR$/cluster-stars/cluster-stars.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/clusters-of-stars.iml" filepath="$PROJECT_DIR$/.idea/clusters-of-stars.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-config/cs-config.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-config/cs-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-eureka/cs-eureka.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-eureka/cs-eureka.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-gateway/cs-gateway.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-gateway/cs-gateway.iml" />

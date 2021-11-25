@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: cs-user-service
+      profile: prod
+      label: master
+      uri: http://106.75.66.14:9966

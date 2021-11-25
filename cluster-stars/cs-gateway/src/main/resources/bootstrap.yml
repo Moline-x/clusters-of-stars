@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    config:
+      name: cs-gateway
+      profile: prod
+      label: master
+      # uri: http://localhost:9966  dev
+      uri: http://106.75.66.14:9966
