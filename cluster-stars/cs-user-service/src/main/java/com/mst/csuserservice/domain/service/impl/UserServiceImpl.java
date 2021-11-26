@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -81,9 +82,10 @@ public class UserServiceImpl implements UserService {
         if (accountOptional.isPresent()) {
             // 获取当前账户
             Account account = accountOptional.get();
-            if (account.getOpenCode() != null) {
+            Long userId = account.getUserId();
+            if (Objects.equals(account.getOpenCode(), SaSecureUtil.md5(String.valueOf(userId)))) {
                 // 执行登录
-                StpUtil.login(account.getUserId());
+                StpUtil.login(userId);
                 // 获取当前登录用户的token info
                 saTokenInfo = StpUtil.getTokenInfo();
             }
@@ -112,7 +114,7 @@ public class UserServiceImpl implements UserService {
             Optional<Long> uid = userLoginStrategy.findUser(u.getEmail(), u.getPassword());
             Optional<Account> account = Optional.empty();
             if (uid.isPresent()) {
-                account = userLoginStrategy.findAccount(AccountConstant.PHONE_TYPE, uid.get());
+                account = userLoginStrategy.findAccount(AccountConstant.EMAIL_TYPE, uid.get());
             }
             return account;
         });
