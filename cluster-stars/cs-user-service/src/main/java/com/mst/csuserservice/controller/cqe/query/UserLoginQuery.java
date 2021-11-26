@@ -14,14 +14,25 @@ import javax.validation.constraints.NotNull;
 public class UserLoginQuery {
 
     /**
-     * 用户名
-     */
-    @NotNull(message = UserConstant.NAME_NOT_NULL)
-    private String name;
-
-    /**
      * 密码
      */
     @NotNull(message = UserConstant.PWD_NOT_NULL)
     private String password;
+
+    /**
+     * 手机号
+     */
+    @NotNull(message = UserConstant.MOBILE_NOT_NULL)
+    private String mobile;
+
+    /**
+     * 电子邮箱
+     */
+    @NotNull(message = UserConstant.EMAIL_NOT_NULL)
+    private String email;
+
+    /**
+     * 登录类型
+     */
+    private int loginType;
 }

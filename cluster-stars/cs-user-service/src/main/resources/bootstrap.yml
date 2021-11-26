@@ -2,6 +2,6 @@ spring:
   cloud:
     config:
       name: cs-user-service
-      profile: prod
+      profile: dev
       label: master
-      uri: http://106.75.66.14:9966
+      uri: http://localhost:9966
