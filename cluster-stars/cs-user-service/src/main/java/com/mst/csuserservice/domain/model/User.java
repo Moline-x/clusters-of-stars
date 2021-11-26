@@ -19,7 +19,7 @@ import java.util.Objects;
  * 用户实体
  */
 @Proxy(lazy = false)
-@Table(name = "user")
+@Table(name = "t_user")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -58,6 +58,11 @@ public class User extends BaseEntity {
      * 电话.
      */
     private String mobile;
+
+    /**
+     * 电子邮箱.
+     */
+    private String email;
 
     /**
      * 密码加盐.

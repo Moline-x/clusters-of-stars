@@ -39,6 +39,14 @@ public final class UserConstant {
      */
     public static final String PWD_NOT_NULL = "密码不能为空!";
     /**
+     * 参数校验——手机号.
+     */
+    public static final String MOBILE_NOT_NULL = "手机号不能为空";
+    /**
+     * 参数校验——电子邮箱.
+     */
+    public static final String EMAIL_NOT_NULL = "电子邮箱不能为空";
+    /**
      * 用户状态常量——启用.
      */
     public static final int ENABLE_CODE = 1;
