@@ -1,8 +1,8 @@
 package com.mst.csuserservice.domain.service;
 
-import cn.dev33.satoken.stp.SaTokenInfo;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
 
 /**
@@ -24,5 +24,5 @@ public interface UserService {
      * @param   userLoginQuery  login user query
      * @return  SaTokenInfo
      */
-    SaTokenInfo login(UserLoginQuery userLoginQuery);
+    UserLoginBO login(UserLoginQuery userLoginQuery);
 }

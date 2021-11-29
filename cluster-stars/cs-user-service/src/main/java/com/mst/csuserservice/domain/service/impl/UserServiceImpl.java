@@ -7,6 +7,8 @@ import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.domain.bo.UserLoginBO;
+import com.mst.csuserservice.domain.enums.Role;
 import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -37,11 +36,14 @@ public class UserServiceImpl implements UserService {
 
     private UserLoginStrategy userLoginStrategy;
 
+    private final UserGetPermission userGetPermission;
+
     private final Map<Integer, Function<UserLoginQuery, Optional<Account>>> loginDispatcher = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
 
-    public UserServiceImpl(UserRepository userRepository, UserFactory userFactory) {
+    public UserServiceImpl(UserRepository userRepository, UserFactory userFactory, UserGetPermission userGetPermission) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
+        this.userGetPermission = userGetPermission;
     }
 
     /**
@@ -59,6 +61,8 @@ public class UserServiceImpl implements UserService {
         String openCode = userFactory.buildOpenCode(register.getId());
         Account account = userFactory.buildAccount(openCode, register.getId());
         userRepository.saveAccount(account);
+        // 建立用户与角色关系.
+        userRepository.saveRoleUser(userFactory.buildUserRole(register.getId(), Role.CUSTOMER.getCode()));
         // 返回用户
         return register;
     }
@@ -70,8 +74,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public SaTokenInfo login(UserLoginQuery userLoginQuery) {
+    public UserLoginBO login(UserLoginQuery userLoginQuery) {
+        UserLoginBO userLoginBO = new UserLoginBO();
         SaTokenInfo saTokenInfo = null;
+        List<String> permissionList = new ArrayList<>();
         // 当前密码加密
         String secretKey = SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT);
         // 重新设置loginQuery密码.
@@ -86,11 +92,15 @@ public class UserServiceImpl implements UserService {
             if (Objects.equals(account.getOpenCode(), SaSecureUtil.md5(String.valueOf(userId)))) {
                 // 执行登录
                 StpUtil.login(userId);
+                // 获取权限列表
+                permissionList = userGetPermission.getPermissionList(userId, null);
                 // 获取当前登录用户的token info
                 saTokenInfo = StpUtil.getTokenInfo();
             }
         }
-        return saTokenInfo;
+        userLoginBO.setTokenInfo(saTokenInfo);
+        userLoginBO.setPermissionsList(permissionList);
+        return userLoginBO;
     }
 
     /**

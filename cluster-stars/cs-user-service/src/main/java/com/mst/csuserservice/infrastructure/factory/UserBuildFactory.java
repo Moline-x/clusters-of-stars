@@ -4,11 +4,11 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
-import com.mst.csuserservice.domain.enums.AccountCategory;
 import com.mst.csuserservice.domain.enums.UserState;
 import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
+import com.mst.csuserservice.domain.model.UserRole;
 import org.springframework.stereotype.Component;
 
 /**
@@ -55,5 +55,16 @@ public class UserBuildFactory implements UserFactory {
         return Account.builder().userId(userId)
                 .openCode(openCode)
                 .category(AccountConstant.PHONE_TYPE).build();
+    }
+
+    /**
+     * 根据userId和role id构建用户角色关系.
+     * @param  userId     user id
+     * @param  roleId     role id
+     * @return UserRole
+     */
+    @Override
+    public UserRole buildUserRole(Long userId, Long roleId) {
+        return UserRole.builder().userId(userId).roleId(roleId).build();
     }
 }

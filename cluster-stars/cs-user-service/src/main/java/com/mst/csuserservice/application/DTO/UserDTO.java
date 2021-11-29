@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,4 +29,8 @@ public class UserDTO {
      * token响应结果.
      */
     private Map<String, String> tokenMap;
+    /**
+     * 权限列表.
+     */
+    private List<String> permissions;
 }

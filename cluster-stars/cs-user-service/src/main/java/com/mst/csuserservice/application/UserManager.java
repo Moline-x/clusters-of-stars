@@ -1,9 +1,9 @@
 package com.mst.csuserservice.application;
 
-import cn.dev33.satoken.stp.SaTokenInfo;
 import com.mst.csuserservice.application.DTO.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.service.UserService;
 import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
@@ -44,8 +44,8 @@ public class UserManager {
      */
     public UserDTO login(UserLoginQuery userLoginQuery) {
         // 启动用户领域服务完成登录.
-        SaTokenInfo tokenInfo = userService.login(userLoginQuery);
+        UserLoginBO userLoginBO = userService.login(userLoginQuery);
         // 响应登录结果.
-        return UserDtoFactory.newUserDtoForLogin(tokenInfo);
+        return UserDtoFactory.newUserDtoForLogin(userLoginBO);
     }
 }

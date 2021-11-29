@@ -3,9 +3,11 @@ package com.mst.csuserservice.infrastructure;
 import com.google.common.collect.Lists;
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
+import com.mst.csuserservice.domain.model.UserRole;
 import com.mst.csuserservice.domain.repository.UserRepository;
 import com.mst.csuserservice.infrastructure.jpa.JpaAccountRepository;
 import com.mst.csuserservice.infrastructure.jpa.JpaUserRepository;
+import com.mst.csuserservice.infrastructure.jpa.JpaUserRoleRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,9 +25,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final JpaAccountRepository jpaAccountRepository;
 
-    public UserRepositoryImpl(JpaUserRepository jpaUserRepository, JpaAccountRepository jpaAccountRepository) {
+    private final JpaUserRoleRepository jpaUserRoleRepository;
+
+    public UserRepositoryImpl(JpaUserRepository jpaUserRepository,
+                              JpaAccountRepository jpaAccountRepository,
+                              JpaUserRoleRepository jpaUserRoleRepository) {
         this.jpaUserRepository = jpaUserRepository;
         this.jpaAccountRepository = jpaAccountRepository;
+        this.jpaUserRoleRepository = jpaUserRoleRepository;
     }
 
     /**
@@ -109,5 +116,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Account saveAccount(Account account) {
         return jpaAccountRepository.save(account);
+    }
+
+    /**
+     * 保存用户Id和角色Id操作.
+     * @param userRole  user role
+     */
+    @Override
+    public void saveRoleUser(UserRole userRole) {
+        jpaUserRoleRepository.save(userRole);
     }
 }
