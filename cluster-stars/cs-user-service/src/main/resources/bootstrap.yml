@@ -1,7 +1,75 @@
+server:
+  port: 9002
+sa-token:
+  token-name: csusertoken
+  timeout: 86400
+  activity-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+  is-read-cookie: false
+  is-read-head: true
 spring:
-  cloud:
-    config:
-      name: cs-user-service
-      profile: dev
-      label: master
-      uri: http://localhost:9966
+  application:
+    name: cs-user-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.17.0.1:3307/csuser_test?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    # url: jdbc:mysql://106.75.66.14:3307/cscustomer_test?useUnicode=true&characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    # GMT%2b8
+    username: molin
+    password: cmlwxt1231
+    initial-size: 5
+    min-idle: 5
+    max-idle: 20
+    max-active: 50
+    log-abandoned: true
+    remove-abandoned: true
+    remove-abandoned-timeout: 30000
+    max-wait: 30000
+    validation-query: SELECT 1 FROM DUAL
+    test-while-idle: true
+    test-on-borrow: true
+    # type: com.alibaba.druid.pool.DruidDataSource
+    # druid:
+    #   initial-size: 5
+    #   min-idle: 5
+    #   max-active: 20
+    #   max-wait: 60000
+    #   time-between-eviction-runs-millis: 60000
+    #   min-evictable-idle-time-millis: 300000
+    #   validation-query: SELECT 1 FROM DUAL
+    #   test-while-idle: true
+    #   test-on-borrow: false
+    #   test-on-return: false
+    #   pool-prepared-statements: true
+    #   max-pool-prepared-statement-per-connection-size: 20
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+#  redis:
+#    database: 5
+#    host: 106.75.66.14
+#    port: 6379
+#    timeout: 10s
+#    lettuce:
+#      pool:
+#        max-active: 200
+#        max-wait: -1ms
+#        max-idle: 10
+#        min-idle: 0
+eureka:
+  client:
+    service-url:
+      #      defaultZone: http://106.75.66.14:7001/eureka/
+      defaultZone: http://172.17.0.2:7001/eureka/
+
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}

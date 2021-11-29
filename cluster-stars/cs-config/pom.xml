@@ -31,39 +31,40 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>com.spotify</groupId>-->
-<!--                <artifactId>docker-maven-plugin</artifactId>-->
-<!--                <version>1.0.0</version>-->
-<!--                <configuration>-->
-<!--                    &lt;!&ndash;镜像名称 &ndash;&gt;-->
-<!--                    <imageName>cs/${project.artifactId}</imageName>-->
-<!--                    &lt;!&ndash;标签版本&ndash;&gt;-->
-<!--                    <imageTags>-->
-<!--                        <imageTag>latest</imageTag>-->
-<!--                    </imageTags>-->
-<!--                    &lt;!&ndash;基础镜像，相当于Dockerfile里的from&ndash;&gt;-->
-<!--                    <baseImage>adoptopenjdk/openjdk11-openj9:alpine-slim</baseImage>-->
-<!--                    &lt;!&ndash;签名（作者）&ndash;&gt;-->
-<!--                    <maintainer>molineting1231@gmail.com</maintainer>-->
-<!--                    &lt;!&ndash;入口点，project.build.finalName就是project标签下的build标签下的filename标签内容，test-docker-demo&ndash;&gt;-->
-<!--                    &lt;!&ndash;相当于启动容器后，会自动执行java -jar/xxx.jar&ndash;&gt;-->
-<!--                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>-->
-<!--                    &lt;!&ndash;docker地址&ndash;&gt;-->
-<!--                    <dockerHost>http://106.75.66.14:2375</dockerHost>-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <!--镜像名称 -->
+                    <imageName>cs/${project.artifactId}</imageName>
+                    <!--标签版本-->
+                    <imageTags>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                    <!--基础镜像，相当于Dockerfile里的from-->
+                    <baseImage>adoptopenjdk/openjdk11-openj9:alpine-slim</baseImage>
+                    <!--签名（作者）-->
+                    <maintainer>molineting1231@gmail.com</maintainer>
+                    <!--入口点，project.build.finalName就是project标签下的build标签下的filename标签内容，test-docker-demo-->
+                    <!--相当于启动容器后，会自动执行java -jar/xxx.jar-->
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <!--docker地址-->
+                    <dockerHost>https://106.75.66.14:2375</dockerHost>
+                    <dockerCertPath>E:\cluster-stars\dockerkeys</dockerCertPath>
 
-<!--                    &lt;!&ndash; 这里是复制 jar 包到 docker 容器指定目录配置 &ndash;&gt;-->
-<!--                    <resources>-->
-<!--                        <resource>-->
-<!--                            <targetPath>/</targetPath>-->
-<!--                            &lt;!&ndash;复制的根目录，target&ndash;&gt;-->
-<!--                            <directory>${project.build.directory}</directory>-->
-<!--                            &lt;!&ndash;把哪个文件上传到docker，相当于Dockerfile里的add xxx.jar /&ndash;&gt;-->
-<!--                            <include>${project.build.finalName}.jar</include>-->
-<!--                        </resource>-->
-<!--                    </resources>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+                    <!-- 这里是复制 jar 包到 docker 容器指定目录配置 -->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <!--复制的根目录，target-->
+                            <directory>${project.build.directory}</directory>
+                            <!--把哪个文件上传到docker，相当于Dockerfile里的add xxx.jar /-->
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

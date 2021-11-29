@@ -67,7 +67,8 @@
                     <!--相当于启动容器后，会自动执行java -jar/xxx.jar-->
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <!--docker地址-->
-                    <dockerHost>http://106.75.66.14:2375</dockerHost>
+                    <dockerHost>https://106.75.66.14:2375</dockerHost>
+                    <dockerCertPath>E:\cluster-stars\dockerkeys</dockerCertPath>
 
                     <!-- 这里是复制 jar 包到 docker 容器指定目录配置 -->
                     <resources>

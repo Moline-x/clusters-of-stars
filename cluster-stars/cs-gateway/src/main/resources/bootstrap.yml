@@ -1,8 +1,23 @@
+server:
+  port: 9001
+eureka:
+  client:
+    service-url:
+      defaultZone: http://172.17.0.2:7001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
 spring:
+  application:
+    name: cs-gateway
   cloud:
-    config:
-      name: cs-gateway
-      profile: prod
-      label: master
-      # uri: http://localhost:9966  dev
-      uri: http://106.75.66.14:9966
+    gateway:
+      routes:
+        - id: cs-routes-user
+          uri: lb://cs-user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
