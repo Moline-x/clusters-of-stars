@@ -11,10 +11,26 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface JpaUserRepository extends JpaRepository<User, Long> {
 
     /**
-     * 根据用户名和密码查找用户.
-     * @param   username  username
+     * 根据手机号和密码查找用户.
+     * @param   mobile    mobile
      * @param   password  password
      * @return  User
      */
-    User findByNameAndPassword(String username, String password);
+    User findByMobileAndPassword(String mobile, String password);
+
+    /**
+     * 根据电子邮箱和密码查找用户.
+     * @param  email     email
+     * @param  password  password
+     * @return User
+     */
+    User findByEmailAndPassword(String email, String password);
+
+    /**
+     * 根据手机号或邮箱查询用户.
+     * @param  mobile   mobile
+     * @param  email    email
+     * @return User
+     */
+    User findByMobileAndEmail(String mobile, String email);
 }

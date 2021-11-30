@@ -1,6 +1,6 @@
 package com.mst.csuserservice.controller;
 
-import com.mst.csuserservice.application.DTO.UserDTO;
+import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.application.UserManager;
 import com.mst.csuserservice.controller.component.ResultVO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;

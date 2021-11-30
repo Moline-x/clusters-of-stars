@@ -1,8 +1,9 @@
 package com.mst.csuserservice.infrastructure.factory;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
-import com.mst.csuserservice.application.DTO.UserDTO;
+import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.constant.UserConstant;
+import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
 import org.springframework.stereotype.Component;
 
@@ -37,11 +38,12 @@ public class UserDtoFactory {
 
     /**
      * 登录时创建UserDTO的封装.
-     * @param  tokenInfo token information
+     * @param  userLoginBO token information and permissions
      * @return UserDTO
      */
-    public static UserDTO newUserDtoForLogin(final SaTokenInfo tokenInfo) {
+    public static UserDTO newUserDtoForLogin(final UserLoginBO userLoginBO) {
         UserDTO userDTO = new UserDTO();
+        SaTokenInfo tokenInfo = userLoginBO.getTokenInfo();
         if (tokenInfo == null) {
             userDTO.setMsg(false);
             return userDTO;
@@ -52,6 +54,7 @@ public class UserDtoFactory {
         tokenMap.put("loginId", String.valueOf(tokenInfo.getLoginId()));
         userDTO.setTokenMap(tokenMap);
         userDTO.setMsg(true);
+        userDTO.setPermissions(userLoginBO.getPermissionsList());
         return userDTO;
     }
 }

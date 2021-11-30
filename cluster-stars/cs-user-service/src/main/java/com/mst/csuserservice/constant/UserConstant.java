@@ -21,7 +21,7 @@ public final class UserConstant {
     /**
      * 注册失败提示语.
      */
-    public static final String REGISTER_FAILED = "注册失败⊙﹏⊙";
+    public static final String REGISTER_FAILED = "注册失败⊙﹏⊙，当前手机号或邮箱已被注册";
     /**
      * 用户名或密码错误提示语.
      */
@@ -39,6 +39,14 @@ public final class UserConstant {
      */
     public static final String PWD_NOT_NULL = "密码不能为空!";
     /**
+     * 参数校验——手机号.
+     */
+    public static final String MOBILE_NOT_NULL = "手机号不能为空";
+    /**
+     * 参数校验——电子邮箱.
+     */
+    public static final String EMAIL_NOT_NULL = "电子邮箱不能为空";
+    /**
      * 用户状态常量——启用.
      */
     public static final int ENABLE_CODE = 1;
@@ -50,4 +58,16 @@ public final class UserConstant {
      * tokenMap初始化容量.
      */
     public static final int TOKEN_MAP_CAPACITY = 6;
+    /**
+     * 超级管理员角色ID.
+     */
+    public static final Long ROLE_SUPER_ADMIN = 1L;
+    /**
+     * 普通管理员角色ID.
+     */
+    public static final Long ROLE_ADMIN = 2L;
+    /**
+     * 普通用户角色ID.
+     */
+    public static final Long ROLE_CUSTOMER = 3L;
 }

@@ -28,5 +28,12 @@ public class UserCreateCommand {
     /**
      * 手机号
      */
+    @NotNull(message = UserConstant.MOBILE_NOT_NULL)
     private String mobile;
+
+    /**
+     * 电子邮箱
+     */
+    @NotNull(message = UserConstant.EMAIL_NOT_NULL)
+    private String email;
 }

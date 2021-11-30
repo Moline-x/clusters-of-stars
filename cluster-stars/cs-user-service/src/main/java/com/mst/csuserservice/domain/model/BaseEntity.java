@@ -43,11 +43,6 @@ public class BaseEntity implements Serializable {
     @JsonIgnore
     private Date edited;
 
-//    /**
-//     * 版本号.
-//     */
-//    @Version
-//    private Long version;
 
     /**
      * 回调创建时间.
