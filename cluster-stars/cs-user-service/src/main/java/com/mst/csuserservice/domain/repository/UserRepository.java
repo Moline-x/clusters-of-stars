@@ -2,6 +2,7 @@ package com.mst.csuserservice.domain.repository;
 
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
+import com.mst.csuserservice.domain.model.UserRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,4 +63,18 @@ public interface UserRepository {
      * @return Account
      */
     Account saveAccount(Account account);
+
+    /**
+     * 保存用户ID和角色ID操作.
+     * @param userRole    user id 和 role id的聚合
+     */
+    void saveRoleUser(UserRole userRole);
+
+    /**
+     * 根据手机号和邮箱查找用户.
+     * @param  mobile  手机号
+     * @param  email   邮箱
+     * @return Optional User
+     */
+    Optional<User> findByMobileAndEmail(String mobile, String email);
 }

@@ -3,6 +3,7 @@ package com.mst.csuserservice.domain.factory;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
+import com.mst.csuserservice.domain.model.UserRole;
 
 /**
  * @author Molin
@@ -32,4 +33,12 @@ public interface UserFactory {
      * @return Account
      */
     Account buildAccount(String openCode, Long userId);
+
+    /**
+     * 根据userId和roleId创建账户.
+     * @param  userId     user id
+     * @param  roleId     role id
+     * @return UserRole
+     */
+    UserRole buildUserRole(Long userId, Long roleId);
 }
