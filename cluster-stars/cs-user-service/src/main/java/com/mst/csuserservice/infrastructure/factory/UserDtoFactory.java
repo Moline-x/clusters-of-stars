@@ -1,7 +1,7 @@
 package com.mst.csuserservice.infrastructure.factory;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
-import com.mst.csuserservice.application.DTO.UserDTO;
+import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;

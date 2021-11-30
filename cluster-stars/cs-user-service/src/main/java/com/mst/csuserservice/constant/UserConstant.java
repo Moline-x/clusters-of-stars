@@ -21,7 +21,7 @@ public final class UserConstant {
     /**
      * 注册失败提示语.
      */
-    public static final String REGISTER_FAILED = "注册失败⊙﹏⊙";
+    public static final String REGISTER_FAILED = "注册失败⊙﹏⊙，当前手机号或邮箱已被注册";
     /**
      * 用户名或密码错误提示语.
      */

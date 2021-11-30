@@ -1,6 +1,6 @@
 package com.mst.csuserservice.infrastructure.factory;
 
-import com.mst.csuserservice.application.DTO.UserDTO;
+import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.component.ResultVO;
 import org.springframework.stereotype.Component;

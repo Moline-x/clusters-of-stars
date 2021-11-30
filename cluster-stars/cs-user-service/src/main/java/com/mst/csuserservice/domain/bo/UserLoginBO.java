@@ -1,6 +1,7 @@
 package com.mst.csuserservice.domain.bo;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * class description: 用户登录业务对象
  */
 @Data
+@Builder
 @ToString
 public class UserLoginBO {
 

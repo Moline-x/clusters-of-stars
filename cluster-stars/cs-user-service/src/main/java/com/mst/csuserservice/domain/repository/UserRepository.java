@@ -69,4 +69,12 @@ public interface UserRepository {
      * @param userRole    user id 和 role id的聚合
      */
     void saveRoleUser(UserRole userRole);
+
+    /**
+     * 根据手机号和邮箱查找用户.
+     * @param  mobile  手机号
+     * @param  email   邮箱
+     * @return Optional User
+     */
+    Optional<User> findByMobileAndEmail(String mobile, String email);
 }

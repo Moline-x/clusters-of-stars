@@ -40,7 +40,9 @@ public class UserServiceImpl implements UserService {
 
     private final Map<Integer, Function<UserLoginQuery, Optional<Account>>> loginDispatcher = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
 
-    public UserServiceImpl(UserRepository userRepository, UserFactory userFactory, UserGetPermission userGetPermission) {
+    public UserServiceImpl(UserRepository userRepository,
+                           UserFactory userFactory,
+                           UserGetPermission userGetPermission) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
         this.userGetPermission = userGetPermission;
@@ -53,35 +55,35 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User register(UserCreateCommand userCreateCommand) {
-        // 补全用户信息，构建用户实体.
-        User user = userFactory.buildUser(userCreateCommand);
-        // 将用户实体持久化入数据库.
-        User register = userRepository.saveUser(user);
-        // 将user id按策略生成openCode，并持久化入数据库.
-        String openCode = userFactory.buildOpenCode(register.getId());
-        Account account = userFactory.buildAccount(openCode, register.getId());
-        userRepository.saveAccount(account);
-        // 建立用户与角色关系.
-        userRepository.saveRoleUser(userFactory.buildUserRole(register.getId(), Role.CUSTOMER.getCode()));
-        // 返回用户
+        // 判断是否已注册.
+        User register = null;
+        Optional<User> user = userRepository.findByMobileAndEmail(userCreateCommand.getMobile(), userCreateCommand.getEmail());
+        // 如果用户已存在，则直接响应回应用层，如果不存在，则保存用户信息.
+        if (user.isEmpty()) {
+            // 补全用户信息，构建用户实体，将用户实体持久化入数据库.
+            register = userRepository.saveUser(userFactory.buildUser(userCreateCommand));
+            // 将user id按策略生成openCode，并持久化入数据库.
+            String openCode = userFactory.buildOpenCode(register.getId());
+            Account account = userFactory.buildAccount(openCode, register.getId());
+            userRepository.saveAccount(account);
+            // 建立用户与角色关系.
+            userRepository.saveRoleUser(userFactory.buildUserRole(register.getId(), Role.CUSTOMER.getCode()));
+        }
         return register;
     }
 
     /**
      * 登录.
      * @param   userLoginQuery  login user query
-     * @return  SaTokenInfo
+     * @return  token和permission list
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserLoginBO login(UserLoginQuery userLoginQuery) {
-        UserLoginBO userLoginBO = new UserLoginBO();
         SaTokenInfo saTokenInfo = null;
         List<String> permissionList = new ArrayList<>();
-        // 当前密码加密
-        String secretKey = SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT);
         // 重新设置loginQuery密码.
-        userLoginQuery.setPassword(secretKey);
+        userLoginQuery.setPassword(SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT));
         // 执行登录逻辑校验，得到账户容器.
         Optional<Account> accountOptional = getLoginResult(userLoginQuery);
         // 如果账户存在
@@ -89,18 +91,14 @@ public class UserServiceImpl implements UserService {
             // 获取当前账户
             Account account = accountOptional.get();
             Long userId = account.getUserId();
-            if (Objects.equals(account.getOpenCode(), SaSecureUtil.md5(String.valueOf(userId)))) {
-                // 执行登录
-                StpUtil.login(userId);
-                // 获取权限列表
-                permissionList = userGetPermission.getPermissionList(userId, null);
-                // 获取当前登录用户的token info
-                saTokenInfo = StpUtil.getTokenInfo();
-            }
+            // 执行登录
+            Optional.ofNullable(account.getOpenCode()).ifPresent(StpUtil::login);
+            // 获取权限列表
+            permissionList = userGetPermission.getPermissionList(userId, null);
+            // 获取当前登录用户的token info
+            saTokenInfo = StpUtil.getTokenInfo();
         }
-        userLoginBO.setTokenInfo(saTokenInfo);
-        userLoginBO.setPermissionsList(permissionList);
-        return userLoginBO;
+        return UserLoginBO.builder().tokenInfo(saTokenInfo).permissionsList(permissionList).build();
     }
 
     /**

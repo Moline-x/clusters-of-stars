@@ -126,4 +126,19 @@ public class UserRepositoryImpl implements UserRepository {
     public void saveRoleUser(UserRole userRole) {
         jpaUserRoleRepository.save(userRole);
     }
+
+    /**
+     * 根据手机号和邮箱查询用户.
+     * @param  mobile  手机号
+     * @param  email   邮箱
+     * @return Optional User
+     */
+    @Override
+    public Optional<User> findByMobileAndEmail(String mobile, String email) {
+        User user = jpaUserRepository.findByMobileAndEmail(mobile, email);
+        if (user != null) {
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
 }

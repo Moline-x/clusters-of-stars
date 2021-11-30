@@ -1,4 +1,4 @@
-package com.mst.csuserservice.application.DTO;
+package com.mst.csuserservice.application.dto;
 
 import com.mst.csuserservice.domain.model.User;
 import lombok.AllArgsConstructor;
