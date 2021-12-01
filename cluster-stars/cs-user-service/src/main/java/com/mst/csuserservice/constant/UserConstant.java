@@ -78,4 +78,12 @@ public final class UserConstant {
      * 普通用户角色ID.
      */
     public static final Long ROLE_CUSTOMER = 3L;
+    /**
+     * 后台创建用户成功提示语.
+     */
+    public static final String USER_CREATED_SUCCESS = "成功创建一个新用户!";
+    /**
+     * 后台创建用户失败提示语.
+     */
+    public static final String USER_CREATED_FAILED = "创建用户失败";
 }

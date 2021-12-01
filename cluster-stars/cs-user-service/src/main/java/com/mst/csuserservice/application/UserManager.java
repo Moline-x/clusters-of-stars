@@ -61,4 +61,17 @@ public class UserManager {
         // 响应退出结果.
         return UserDtoFactory.newUserDtoForLogout(loginId);
     }
+
+    /**
+     * 后台创建用户.
+     * @param   userCreateCommand  create user command
+     * @return  UserDTO
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public UserDTO createUser(UserCreateCommand userCreateCommand) {
+        // 启动用户领域服务完成添加用户操作.
+        User user = userService.createUser(userCreateCommand);
+        // 响应创建结果.
+        return UserDtoFactory.newUserDtoForRegister(user);
+    }
 }

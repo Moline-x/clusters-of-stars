@@ -1,5 +1,6 @@
 package com.mst.csuserservice.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.application.UserManager;
@@ -74,4 +75,30 @@ public class UserController {
         }
         return "offline";
     }
+
+    /**
+     * 后台新建一个用户.
+     * @param  userCreateCommand  create user command
+     * @return ResultVO<UserDTO>
+     */
+    @SaCheckPermission("user-add")
+    @PostMapping("/create")
+    public ResultVO<UserDTO> createUser(@RequestBody UserCreateCommand userCreateCommand) {
+        // 启动应用层构建用户指令.
+        UserDTO addUser = userManager.createUser(userCreateCommand);
+        // 回调结果.
+        return UserResultFactory.newResultForCreateUser(addUser);
+    }
+
+    /**
+     * 后台删除一个用户.
+     * @param  userId  user id
+     * @return ResultVO<UserDTO>
+     */
+//    @SaCheckPermission("user-delete")
+//    @GetMapping("/remove")
+//    public ResultVO<UserDTO> removeUser(@RequestParam Long userId) {
+//        // 根据user id启动应用层删除用户指令
+//        // 回调结果.
+//    }
 }

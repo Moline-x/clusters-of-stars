@@ -16,9 +16,9 @@ public enum ResultCode implements IResultCode{
     UNAUTHORIZED(401, "暂未登录或token已过期"),
     FORBIDDEN(403, "没有相关权限");
 
-    private long code;
+    private final long code;
 
-    private String message;
+    private final String message;
 
     ResultCode(long code, String message) {
         this.code = code;

@@ -25,4 +25,11 @@ public interface UserService {
      * @return  SaTokenInfo
      */
     UserLoginBO login(UserLoginQuery userLoginQuery);
+
+    /**
+     * 后台创建用户.
+     * @param  userCreateCommand  create user command
+     * @return User
+     */
+    User createUser(UserCreateCommand userCreateCommand);
 }
