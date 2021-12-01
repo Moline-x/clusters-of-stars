@@ -40,4 +40,17 @@ public class UserResultFactory {
         }
         return ResultVO.success(userDTO, UserConstant.LOGIN_SUCCEED);
     }
+
+    /**
+     * 退出回调成功创建返回结果
+     * @param   userDTO  UserDTO
+     * @return  ResultVO
+     */
+    public static ResultVO<UserDTO> newResultForLogout(final UserDTO userDTO) {
+
+        if (Boolean.FALSE.equals(userDTO.getMsg())) {
+            return ResultVO.validateFailed(UserConstant.LOGOUT_FAILED);
+        }
+        return ResultVO.success(userDTO, UserConstant.LOGOUT_SUCCEED);
+    }
 }

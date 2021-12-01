@@ -1,5 +1,6 @@
 package com.mst.csuserservice.application;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
@@ -47,5 +48,17 @@ public class UserManager {
         UserLoginBO userLoginBO = userService.login(userLoginQuery);
         // 响应登录结果.
         return UserDtoFactory.newUserDtoForLogin(userLoginBO);
+    }
+
+    /**
+     * 退出.
+     * @return UserDTO
+     */
+    public UserDTO logout() {
+        String loginId = (String) StpUtil.getLoginIdDefaultNull();
+        // 注销会话.
+        StpUtil.logoutByLoginId(loginId);
+        // 响应退出结果.
+        return UserDtoFactory.newUserDtoForLogout(loginId);
     }
 }
