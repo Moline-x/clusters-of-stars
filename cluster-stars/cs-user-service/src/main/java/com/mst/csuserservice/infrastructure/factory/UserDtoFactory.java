@@ -57,4 +57,20 @@ public class UserDtoFactory {
         userDTO.setPermissions(userLoginBO.getPermissionsList());
         return userDTO;
     }
+
+    /**
+     * 退出时创建UserDTO的封装.
+     * @param  loginId  login id
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForLogout(final String loginId) {
+        UserDTO userDTO = new UserDTO();
+        if (loginId != null) {
+            userDTO.setUser(User.builder().name(loginId).build());
+            userDTO.setMsg(true);
+        } else {
+            userDTO.setMsg(false);
+        }
+        return userDTO;
+    }
 }

@@ -31,6 +31,14 @@ public final class UserConstant {
      */
     public static final String LOGIN_SUCCEED = "登陆成功，欢迎回来!";
     /**
+     * 退出成功提示语.
+     */
+    public static final String LOGOUT_SUCCEED = "已退出，再见~";
+    /**
+     * 退出失败提示语.
+     */
+    public static final String LOGOUT_FAILED = "您已经退出";
+    /**
      * 参数校验——用户名.
      */
     public static final String NAME_NOT_NULL = "用户名不能为空!";
