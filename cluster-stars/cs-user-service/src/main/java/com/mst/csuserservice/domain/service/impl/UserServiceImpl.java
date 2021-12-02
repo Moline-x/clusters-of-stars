@@ -34,8 +34,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserFactory userFactory;
 
-    private UserLoginStrategy userLoginStrategy;
-
     private final UserGetPermission userGetPermission;
 
     private final Map<Integer, Function<UserLoginQuery, Optional<Account>>> loginDispatcher = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
@@ -132,25 +130,24 @@ public class UserServiceImpl implements UserService {
     @PostConstruct
     public void loginDispatcherInit() {
         // 手机登录逻辑校验.
-        loginDispatcher.put(AccountConstant.PHONE_TYPE, u -> {
-            userLoginStrategy = new UserMobileLoginStrategy(userRepository);
-            Optional<Long> uid = userLoginStrategy.findUser(u.getMobile(), u.getPassword());
-            Optional<Account> account = Optional.empty();
-            if (uid.isPresent()) {
-                account = userLoginStrategy.findAccount(AccountConstant.PHONE_TYPE, uid.get());
-            }
-            return account;
-        });
+        loginDispatcher.put(AccountConstant.PHONE_TYPE, u -> userLoginStrategyHandler(new UserMobileLoginStrategy(userRepository), u));
         // 电子邮箱登录逻辑校验.
-        loginDispatcher.put(AccountConstant.EMAIL_TYPE, u -> {
-            userLoginStrategy = new UserEmailLoginStrategy(userRepository);
-            Optional<Long> uid = userLoginStrategy.findUser(u.getEmail(), u.getPassword());
-            Optional<Account> account = Optional.empty();
-            if (uid.isPresent()) {
-                account = userLoginStrategy.findAccount(AccountConstant.EMAIL_TYPE, uid.get());
-            }
-            return account;
-        });
+        loginDispatcher.put(AccountConstant.EMAIL_TYPE, u -> userLoginStrategyHandler(new UserEmailLoginStrategy(userRepository), u));
+    }
+
+    /**
+     * 执行用户登录策略.
+     * @param  userLoginStrategy  用户登录策略
+     * @param  userLoginQuery     用户登录查询对象
+     * @return Optional<Account>
+     */
+    public Optional<Account> userLoginStrategyHandler(UserLoginStrategy userLoginStrategy, UserLoginQuery userLoginQuery) {
+        Optional<Long> uid = userLoginStrategy.findUser(userLoginQuery.getName(), userLoginQuery.getPassword());
+        Optional<Account> account = Optional.empty();
+        if (uid.isPresent()) {
+            account = userLoginStrategy.findAccount(userLoginQuery.getLoginType(), uid.get());
+        }
+        return account;
     }
 
     /**
