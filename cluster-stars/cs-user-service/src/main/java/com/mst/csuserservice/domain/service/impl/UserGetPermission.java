@@ -21,7 +21,7 @@ public class UserGetPermission implements StpInterface {
     }
 
     /**
-     *
+     * 获取权限列表.
      * @param  loginId user id
      * @param  s       some args
      * @return permission list
@@ -29,7 +29,7 @@ public class UserGetPermission implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String s) {
         // 1. 根据角色Id获取权限列表.
-        return permissionMapper.findPermissionsByUserId((Long) loginId);
+        return permissionMapper.findPermissionsByUserId(Long.valueOf(loginId.toString()));
     }
 
     @Override

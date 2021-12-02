@@ -36,4 +36,9 @@ public class UserCreateCommand {
      */
     @NotNull(message = UserConstant.EMAIL_NOT_NULL)
     private String email;
+
+    /**
+     * 角色Id
+     */
+    private Long roleId;
 }

@@ -49,8 +49,21 @@ public class UserResultFactory {
     public static ResultVO<UserDTO> newResultForLogout(final UserDTO userDTO) {
 
         if (Boolean.FALSE.equals(userDTO.getMsg())) {
-            return ResultVO.validateFailed(UserConstant.LOGOUT_FAILED);
+            return ResultVO.unauthorized(UserConstant.LOGOUT_FAILED);
         }
         return ResultVO.success(userDTO, UserConstant.LOGOUT_SUCCEED);
+    }
+
+    /**
+     * 添加用户回调成功创建返回结果
+     * @param   userDTO  UserDTO
+     * @return  ResultVO
+     */
+    public static ResultVO<UserDTO> newResultForCreateUser(final UserDTO userDTO) {
+
+        if (Boolean.FALSE.equals(userDTO.getMsg())) {
+            return ResultVO.validateFailed(UserConstant.USER_CREATED_FAILED);
+        }
+        return ResultVO.success(userDTO, UserConstant.USER_CREATED_SUCCESS);
     }
 }
