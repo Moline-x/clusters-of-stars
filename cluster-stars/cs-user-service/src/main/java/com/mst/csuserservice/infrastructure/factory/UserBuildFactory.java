@@ -4,6 +4,7 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.domain.enums.UserState;
 import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.model.Account;
@@ -66,5 +67,26 @@ public class UserBuildFactory implements UserFactory {
     @Override
     public UserRole buildUserRole(Long userId, Long roleId) {
         return UserRole.builder().userId(userId).roleId(roleId).build();
+    }
+
+    /**
+     * 根据指令更新用户实体.
+     *
+     * @param userUpdateCommand user update command
+     * @param user              user
+     * @return User
+     */
+    @Override
+    public User buildUser(UserUpdateCommand userUpdateCommand, User user) {
+
+        return User.builder().id(userUpdateCommand.getId())
+                .name(userUpdateCommand.getName())
+                .password(user.getPassword())
+                .salt(user.getSalt())
+                .state(user.getState())
+                .created(user.getCreated())
+                .mobile(userUpdateCommand.getMobile())
+                .email(userUpdateCommand.getEmail())
+                .build();
     }
 }

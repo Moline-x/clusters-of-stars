@@ -7,6 +7,7 @@ import com.mst.csuserservice.application.UserManager;
 import com.mst.csuserservice.controller.component.ResultVO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 
 import com.mst.csuserservice.infrastructure.factory.UserResultFactory;
@@ -98,10 +99,24 @@ public class UserController {
      */
     @SaCheckPermission("user-delete")
     @PostMapping("/remove")
-    public ResultVO<UserDTO> banUser(@RequestBody UserUnBindCommand userUnBindCommand) {
-        // 根据user id启动应用层删除用户指令.
+    public ResultVO<UserDTO> removeUser(@RequestBody UserUnBindCommand userUnBindCommand) {
+        // 启动应用层删除用户指令.
         UserDTO removeUser = userManager.removeUser(userUnBindCommand);
         // 回调结果.
         return UserResultFactory.newResultForRemoveUser(removeUser);
+    }
+
+    /**
+     * 后台更新一个用户.
+     * @param  userUpdateCommand  user update command
+     * @return ResultVO<UserDTO>
+     */
+    @SaCheckPermission("user-update")
+    @PostMapping("/update")
+    public ResultVO<UserDTO> updateUser(@RequestBody UserUpdateCommand userUpdateCommand) {
+        // 启动应用层更新用户指令.
+        UserDTO updateUser = userManager.updateUser(userUpdateCommand);
+        // 回调结果.
+        return UserResultFactory.newResultForUpdateUser(updateUser);
     }
 }

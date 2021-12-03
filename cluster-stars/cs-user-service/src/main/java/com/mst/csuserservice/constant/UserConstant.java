@@ -114,4 +114,12 @@ public final class UserConstant {
      * 后台删除用户失败提示语.
      */
     public static final String USER_REMOVED_FAILED = "删除用户失败";
+    /**
+     * 后台更新用户成功提示语.
+     */
+    public static final String USER_UPDATED_SUCCESS = "更新用户成功";
+    /**
+     * 后台更新用户失败提示语.
+     */
+    public static final String USER_UPDATED_FAILED = "更新用户失败";
 }

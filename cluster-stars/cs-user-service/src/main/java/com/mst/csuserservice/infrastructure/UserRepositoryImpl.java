@@ -141,4 +141,15 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return Optional.empty();
     }
+
+    /**
+     * 根据id查找用户.
+     *
+     * @param userId 用户id
+     * @return Optional User
+     */
+    @Override
+    public User findUserById(Long userId) {
+        return jpaUserRepository.getOne(userId);
+    }
 }

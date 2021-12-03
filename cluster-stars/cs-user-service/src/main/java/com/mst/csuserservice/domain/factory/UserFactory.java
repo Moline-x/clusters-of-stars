@@ -1,6 +1,7 @@
 package com.mst.csuserservice.domain.factory;
 
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.model.UserRole;
@@ -41,4 +42,12 @@ public interface UserFactory {
      * @return UserRole
      */
     UserRole buildUserRole(Long userId, Long roleId);
+
+    /**
+     * 根据指令更新实体.
+     * @param  userUpdateCommand user update command
+     * @param  user              user
+     * @return User
+     */
+    User buildUser(UserUpdateCommand userUpdateCommand, User user);
 }

@@ -85,4 +85,20 @@ public class UserDtoFactory {
         userDTO.setMsg(removeResult && unbindResult);
         return userDTO;
     }
+
+    /**
+     * 更新用户时创建UserDTO的封装.
+     * @param  user  user update info
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForUpdate(final User user) {
+        UserDTO userDTO = new UserDTO();
+        if (user != null) {
+            userDTO.setUser(user);
+            userDTO.setMsg(true);
+        } else {
+            userDTO.setMsg(false);
+        }
+        return userDTO;
+    }
 }

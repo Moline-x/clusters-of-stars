@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
+
 /**
  * @author Molin
  * @date 2021/12/1  21:04
@@ -35,5 +37,16 @@ public class ResponseExceptionHandler {
     @ExceptionHandler(NotLoginException.class)
     public ResultVO<String> handlerNotLoginException(NotLoginException ex) {
         return ResultVO.unauthorized(ex.getMessage());
+    }
+
+    /**
+     * 处理未找到正确实体异常.
+     * @param  ex EntityNotFoundException
+     * @return message
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResultVO<String> handlerEntityNotFoundException(EntityNotFoundException ex) {
+        return ResultVO.validateFailed(ex.getMessage());
     }
 }

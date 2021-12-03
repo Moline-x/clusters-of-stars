@@ -77,4 +77,11 @@ public interface UserRepository {
      * @return Optional User
      */
     Optional<User> findByMobileAndEmail(String mobile, String email);
+
+    /**
+     * 根据id查找用户.
+     * @param  userId  用户id
+     * @return Optional User
+     */
+    User findUserById(Long userId);
 }

@@ -2,6 +2,7 @@ package com.mst.csuserservice.domain.service;
 
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
@@ -49,4 +50,11 @@ public interface UserService {
      * @return true or false
      */
     Boolean unBindUserAndRole(UserUnBindCommand userUnBindCommand);
+
+    /**
+     * 后台更新用户.
+     * @param  userUpdateCommand  user update command
+     * @return User
+     */
+    User updateUser(UserUpdateCommand userUpdateCommand);
 }

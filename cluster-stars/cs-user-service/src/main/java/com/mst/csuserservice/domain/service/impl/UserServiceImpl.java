@@ -7,6 +7,7 @@ import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.enums.Role;
@@ -157,6 +158,19 @@ public class UserServiceImpl implements UserService {
     public Boolean unBindUserAndRole(UserUnBindCommand userUnBindCommand) {
         int count = userMapper.unBindUserAndRole(userUnBindCommand, UserConstant.DELETED);
         return count > UserConstant.BOUNDARY_COUNT;
+    }
+
+    /**
+     * 更新用户.
+     * @param  userUpdateCommand  user update command
+     * @return User
+     */
+    @Override
+    public User updateUser(UserUpdateCommand userUpdateCommand) {
+        // 根据id查找用户.
+        User user = userRepository.findUserById(userUpdateCommand.getId());
+        // 补全用户信息，并更新进数据库.
+        return userRepository.saveUser(userFactory.buildUser(userUpdateCommand, user));
     }
 
     /**

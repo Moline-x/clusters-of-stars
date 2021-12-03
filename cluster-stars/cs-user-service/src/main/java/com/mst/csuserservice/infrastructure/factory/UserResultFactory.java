@@ -79,4 +79,17 @@ public class UserResultFactory {
         }
         return ResultVO.success(userDTO, UserConstant.USER_REMOVED_SUCCESS);
     }
+
+    /**
+     * 更新用户回调成功创建返回结果
+     * @param   userDTO  UserDTO
+     * @return  ResultVO
+     */
+    public static ResultVO<UserDTO> newResultForUpdateUser(final UserDTO userDTO) {
+
+        if (Boolean.FALSE.equals(userDTO.getMsg())) {
+            return ResultVO.failed(UserConstant.USER_UPDATED_FAILED);
+        }
+        return ResultVO.success(userDTO, UserConstant.USER_UPDATED_SUCCESS);
+    }
 }

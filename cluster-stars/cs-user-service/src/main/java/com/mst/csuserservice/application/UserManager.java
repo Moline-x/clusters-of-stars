@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
@@ -89,5 +90,18 @@ public class UserManager {
         Boolean removeResult = userService.removeUser(userUnBindCommand.getUserIdList());
         // 响应删除结果.
         return UserDtoFactory.newUserDtoForRemove(removeResult, unBindResult);
+    }
+
+    /**
+     * 后台更新用户.
+     * @param   userUpdateCommand  user update command
+     * @return  UserDTO
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public UserDTO updateUser(UserUpdateCommand userUpdateCommand) {
+        // 启动用户领域服务完成更新信息操作.
+        User updateUser = userService.updateUser(userUpdateCommand);
+        // 响应更新结果.
+        return UserDtoFactory.newUserDtoForUpdate(updateUser);
     }
 }
