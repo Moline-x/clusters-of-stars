@@ -6,10 +6,12 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.enums.Role;
 import com.mst.csuserservice.domain.factory.UserFactory;
+import com.mst.csuserservice.domain.mapper.UserMapper;
 import com.mst.csuserservice.domain.model.Account;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.repository.UserRepository;
@@ -36,14 +38,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserGetPermission userGetPermission;
 
+    private final UserMapper userMapper;
+
     private final Map<Integer, Function<UserLoginQuery, Optional<Account>>> loginDispatcher = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
 
     public UserServiceImpl(UserRepository userRepository,
                            UserFactory userFactory,
-                           UserGetPermission userGetPermission) {
+                           UserGetPermission userGetPermission,
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
         this.userGetPermission = userGetPermission;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -122,6 +128,35 @@ public class UserServiceImpl implements UserService {
             userRepository.saveRoleUser(userFactory.buildUserRole(userId, userCreateCommand.getRoleId()));
         }
         return newUser;
+    }
+
+    /**
+     * 根据用户id删除用户操作.
+     * @param  userIds  user id list
+     * @return true or false
+     */
+    @Override
+    public Boolean removeUser(List<Long> userIds) {
+        // 1. 删除用户账户.
+        int removeAccountCount = userMapper.removeAccount(userIds, UserConstant.DELETED);
+        // 2. 删除用户.
+        int removeUserCount = UserConstant.BOUNDARY_COUNT;
+        if (removeAccountCount > UserConstant.BOUNDARY_COUNT) {
+            removeUserCount = userMapper.removeUser(userIds, UserConstant.DELETED);
+        }
+        return removeAccountCount > UserConstant.BOUNDARY_COUNT
+                && removeUserCount > UserConstant.BOUNDARY_COUNT;
+    }
+
+    /**
+     * 根据用户id或角色id解除绑定.
+     * @param  userUnBindCommand  user unbind command
+     * @return true or false
+     */
+    @Override
+    public Boolean unBindUserAndRole(UserUnBindCommand userUnBindCommand) {
+        int count = userMapper.unBindUserAndRole(userUnBindCommand, UserConstant.DELETED);
+        return count > UserConstant.BOUNDARY_COUNT;
     }
 
     /**

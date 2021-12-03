@@ -3,6 +3,7 @@ package com.mst.csuserservice.application;
 import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
@@ -73,5 +74,20 @@ public class UserManager {
         User user = userService.createUser(userCreateCommand);
         // 响应创建结果.
         return UserDtoFactory.newUserDtoForRegister(user);
+    }
+
+    /**
+     * 后台删除用户.
+     * @param   userUnBindCommand  user unbind command
+     * @return  UserDTO
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public UserDTO removeUser(UserUnBindCommand userUnBindCommand) {
+        // 启动用户领域服务完成解除用户与角色绑定操作.
+        Boolean unBindResult = userService.unBindUserAndRole(userUnBindCommand);
+        // 启动用户领域服务完成禁用用户操作.
+        Boolean removeResult = userService.removeUser(userUnBindCommand.getUserIdList());
+        // 响应删除结果.
+        return UserDtoFactory.newUserDtoForRemove(removeResult, unBindResult);
     }
 }

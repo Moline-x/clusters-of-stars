@@ -1,9 +1,12 @@
 package com.mst.csuserservice.domain.service;
 
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.User;
+
+import java.util.List;
 
 /**
  * @author Molin
@@ -32,4 +35,18 @@ public interface UserService {
      * @return User
      */
     User createUser(UserCreateCommand userCreateCommand);
+
+    /**
+     * 后台删除用户.
+     * @param  userIds  user id list
+     * @return true or false
+     */
+    Boolean removeUser(List<Long> userIds);
+
+    /**
+     * 后台解除用户与角色之间绑定.
+     * @param  userUnBindCommand  user unbind command
+     * @return true or false
+     */
+    Boolean unBindUserAndRole(UserUnBindCommand userUnBindCommand);
 }

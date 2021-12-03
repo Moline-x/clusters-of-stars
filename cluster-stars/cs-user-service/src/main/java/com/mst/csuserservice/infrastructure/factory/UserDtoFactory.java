@@ -73,4 +73,16 @@ public class UserDtoFactory {
         }
         return userDTO;
     }
+
+    /**
+     * 删除用户时创建UserDTO的封装.
+     * @param  removeResult  remove result
+     * @param  unbindResult  unbind result
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForRemove(final Boolean removeResult, final Boolean unbindResult) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setMsg(removeResult && unbindResult);
+        return userDTO;
+    }
 }

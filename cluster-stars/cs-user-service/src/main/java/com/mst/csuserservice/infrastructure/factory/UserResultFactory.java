@@ -62,8 +62,21 @@ public class UserResultFactory {
     public static ResultVO<UserDTO> newResultForCreateUser(final UserDTO userDTO) {
 
         if (Boolean.FALSE.equals(userDTO.getMsg())) {
-            return ResultVO.validateFailed(UserConstant.USER_CREATED_FAILED);
+            return ResultVO.failed(UserConstant.USER_CREATED_FAILED);
         }
         return ResultVO.success(userDTO, UserConstant.USER_CREATED_SUCCESS);
+    }
+
+    /**
+     * 删除用户回调成功创建返回结果
+     * @param   userDTO  UserDTO
+     * @return  ResultVO
+     */
+    public static ResultVO<UserDTO> newResultForRemoveUser(final UserDTO userDTO) {
+
+        if (Boolean.FALSE.equals(userDTO.getMsg())) {
+            return ResultVO.failed(UserConstant.USER_REMOVED_FAILED);
+        }
+        return ResultVO.success(userDTO, UserConstant.USER_REMOVED_SUCCESS);
     }
 }
