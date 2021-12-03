@@ -128,9 +128,22 @@ public class UserController {
     @SaCheckPermission("user-get")
     @GetMapping("/get/{id}")
     public ResultVO<UserDTO> getOneUser(@PathVariable("id") Long id) {
-        // 启动应用层获取单个用户信息指令.
+        // 启动应用层获取单个用户信息.
         UserDTO userById = userManager.findUserById(id);
         // 回调结果.
         return UserResultFactory.newResultForFindUserById(userById);
+    }
+
+    /**
+     * 后台查询所有用户信息.
+     * @return ResultVO<UserDTO>
+     */
+    @SaCheckPermission("user-get")
+    @GetMapping("/get")
+    public ResultVO<UserDTO> findAllUsers() {
+        // 启动应用层获取全部用户信息.
+        UserDTO allUsers = userManager.findAllUsers();
+        // 回调结果.
+        return UserResultFactory.newResultForFindAllUser(allUsers);
     }
 }

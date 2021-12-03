@@ -8,6 +8,7 @@ import com.mst.csuserservice.domain.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -109,5 +110,21 @@ public class UserDtoFactory {
      */
     public static UserDTO newUserDtoForFindOne(final User user) {
         return newUserDtoForUpdate(user);
+    }
+
+    /**
+     * 查询所有用户时创建DTO的封装.
+     * @param  list user info list
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForFindAll(final List<User> list) {
+        UserDTO userDTO = new UserDTO();
+        if (!list.isEmpty()) {
+            userDTO.setUserList(list);
+            userDTO.setMsg(true);
+        } else {
+            userDTO.setMsg(false);
+        }
+        return userDTO;
     }
 }

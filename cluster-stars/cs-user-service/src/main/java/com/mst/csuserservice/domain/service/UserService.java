@@ -64,4 +64,10 @@ public interface UserService {
      * @return User
      */
     User findUserById(Long id);
+
+    /**
+     * 后台查询所有用户.
+     * @return  user list
+     */
+    List<User> findAllUsers();
 }

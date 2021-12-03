@@ -185,6 +185,16 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 后台查询所有用户.
+     *
+     * @return user list
+     */
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
      * 登录逻辑分发初始化.
      */
     @PostConstruct

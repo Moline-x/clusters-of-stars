@@ -13,6 +13,8 @@ import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author Molin
  * @date   2021-11-19  23:15
@@ -115,5 +117,16 @@ public class UserManager {
         User user = userService.findUserById(id);
         // 响应查询结果.
         return UserDtoFactory.newUserDtoForFindOne(user);
+    }
+
+    /**
+     * 后台查询所有用户.
+     * @return UserDTO
+     */
+    public UserDTO findAllUsers() {
+        // 启动用户领域服务完成查询所有用户记录操作.
+        List<User> userList = userService.findAllUsers();
+        // 响应查询结果.
+        return UserDtoFactory.newUserDtoForFindAll(userList);
     }
 }

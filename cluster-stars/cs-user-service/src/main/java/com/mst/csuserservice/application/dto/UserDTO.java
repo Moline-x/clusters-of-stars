@@ -33,4 +33,8 @@ public class UserDTO {
      * 权限列表.
      */
     private List<String> permissions;
+    /**
+     * 用户列表.
+     */
+    private List<User> userList;
 }

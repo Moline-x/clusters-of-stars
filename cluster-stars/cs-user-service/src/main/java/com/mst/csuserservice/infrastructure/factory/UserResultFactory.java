@@ -105,4 +105,14 @@ public class UserResultFactory {
         }
         return ResultVO.success(userDTO, UserConstant.USER_FOUND_SUCCESS);
     }
+
+    /**
+     * 根据id查询用户回调成功创建返回结果
+     * @param   userDTO  UserDTO
+     * @return  ResultVO
+     */
+    public static ResultVO<UserDTO> newResultForFindAllUser(final UserDTO userDTO) {
+
+        return newResultForFindUserById(userDTO);
+    }
 }
