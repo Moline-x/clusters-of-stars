@@ -92,4 +92,17 @@ public class UserResultFactory {
         }
         return ResultVO.success(userDTO, UserConstant.USER_UPDATED_SUCCESS);
     }
+
+    /**
+     * 根据id查询用户回调成功创建返回结果
+     * @param   userDTO  UserDTO
+     * @return  ResultVO
+     */
+    public static ResultVO<UserDTO> newResultForFindUserById(final UserDTO userDTO) {
+
+        if (Boolean.FALSE.equals(userDTO.getMsg())) {
+            return ResultVO.failed(UserConstant.USER_FOUND_FAILED);
+        }
+        return ResultVO.success(userDTO, UserConstant.USER_FOUND_SUCCESS);
+    }
 }

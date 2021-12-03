@@ -174,6 +174,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 后台根据id查询用户.
+     *
+     * @param  id user id
+     * @return User
+     */
+    @Override
+    public User findUserById(Long id) {
+        return userRepository.findUserById(id);
+    }
+
+    /**
      * 登录逻辑分发初始化.
      */
     @PostConstruct

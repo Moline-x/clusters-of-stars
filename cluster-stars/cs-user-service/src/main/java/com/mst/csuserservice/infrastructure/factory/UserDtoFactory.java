@@ -101,4 +101,13 @@ public class UserDtoFactory {
         }
         return userDTO;
     }
+
+    /**
+     * 查询单个用户时创建UserDTO的封装.
+     * @param  user user info
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForFindOne(final User user) {
+        return newUserDtoForUpdate(user);
+    }
 }

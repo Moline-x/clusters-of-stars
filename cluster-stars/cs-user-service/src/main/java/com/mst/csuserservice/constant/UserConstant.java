@@ -122,4 +122,12 @@ public final class UserConstant {
      * 后台更新用户失败提示语.
      */
     public static final String USER_UPDATED_FAILED = "更新用户失败";
+    /**
+     * 后台查询单个用户成功提示语.
+     */
+    public static final String USER_FOUND_SUCCESS = "查询用户成功";
+    /**
+     * 后台查询单个用户失败提示语.
+     */
+    public static final String USER_FOUND_FAILED = "查询用户失败";
 }

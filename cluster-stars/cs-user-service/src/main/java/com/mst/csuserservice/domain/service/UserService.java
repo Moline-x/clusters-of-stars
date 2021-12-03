@@ -57,4 +57,11 @@ public interface UserService {
      * @return User
      */
     User updateUser(UserUpdateCommand userUpdateCommand);
+
+    /**
+     * 后台根据id查询用户.
+     * @param  id  user id
+     * @return User
+     */
+    User findUserById(Long id);
 }

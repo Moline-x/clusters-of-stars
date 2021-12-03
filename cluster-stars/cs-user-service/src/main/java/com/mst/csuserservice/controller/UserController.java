@@ -107,7 +107,7 @@ public class UserController {
     }
 
     /**
-     * 后台更新一个用户.
+     * 后台更新用户.
      * @param  userUpdateCommand  user update command
      * @return ResultVO<UserDTO>
      */
@@ -118,5 +118,19 @@ public class UserController {
         UserDTO updateUser = userManager.updateUser(userUpdateCommand);
         // 回调结果.
         return UserResultFactory.newResultForUpdateUser(updateUser);
+    }
+
+    /**
+     * 后台根据id获取用户信息.
+     * @param  id user id
+     * @return ResultVO<UserDTO>
+     */
+    @SaCheckPermission("user-get")
+    @GetMapping("/get/{id}")
+    public ResultVO<UserDTO> getOneUser(@PathVariable("id") Long id) {
+        // 启动应用层获取单个用户信息指令.
+        UserDTO userById = userManager.findUserById(id);
+        // 回调结果.
+        return UserResultFactory.newResultForFindUserById(userById);
     }
 }

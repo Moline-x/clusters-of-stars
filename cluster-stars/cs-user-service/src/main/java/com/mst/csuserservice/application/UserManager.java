@@ -104,4 +104,16 @@ public class UserManager {
         // 响应更新结果.
         return UserDtoFactory.newUserDtoForUpdate(updateUser);
     }
+
+    /**
+     * 后台根据id查找用户.
+     * @param  id  user id
+     * @return UserDTO
+     */
+    public UserDTO findUserById(Long id) {
+        // 启动用户领域服务完成查询单个用户记录操作.
+        User user = userService.findUserById(id);
+        // 响应查询结果.
+        return UserDtoFactory.newUserDtoForFindOne(user);
+    }
 }
