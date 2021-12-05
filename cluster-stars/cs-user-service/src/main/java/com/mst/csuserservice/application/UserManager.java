@@ -1,6 +1,7 @@
 package com.mst.csuserservice.application;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.github.pagehelper.PageInfo;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
@@ -12,8 +13,6 @@ import com.mst.csuserservice.domain.service.UserService;
 import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * @author Molin
@@ -121,11 +120,13 @@ public class UserManager {
 
     /**
      * 后台查询所有用户.
+     * @param  pageNum   page number
+     * @param  pageSize  page size
      * @return UserDTO
      */
-    public UserDTO findAllUsers() {
+    public UserDTO findAllUsers(int pageNum, int pageSize) {
         // 启动用户领域服务完成查询所有用户记录操作.
-        List<User> userList = userService.findAllUsers();
+        PageInfo<User> userList = userService.findAllUsers(pageNum, pageSize);
         // 响应查询结果.
         return UserDtoFactory.newUserDtoForFindAll(userList);
     }

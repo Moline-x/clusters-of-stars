@@ -1,5 +1,6 @@
 package com.mst.csuserservice.domain.service;
 
+import com.github.pagehelper.PageInfo;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
@@ -67,7 +68,9 @@ public interface UserService {
 
     /**
      * 后台查询所有用户.
+     * @param   pageNum    page number
+     * @param   pageSize   page size
      * @return  user list
      */
-    List<User> findAllUsers();
+    PageInfo<User> findAllUsers(int pageNum, int pageSize);
 }

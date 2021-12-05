@@ -1,6 +1,7 @@
 package com.mst.csuserservice.domain.mapper;
 
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.domain.model.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -37,4 +38,10 @@ public interface UserMapper {
      * @return remove count
      */
     int removeAccount(@Param("userIds") List<Long> idList, @Param("deleted") int deleted);
+
+    /**
+     * 查询所有用户.
+     * @return user list
+     */
+    List<User> findAllUsers();
 }

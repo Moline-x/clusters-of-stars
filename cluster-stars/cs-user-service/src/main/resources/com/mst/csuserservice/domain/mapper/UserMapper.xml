@@ -49,4 +49,9 @@
             </foreach>
         </where>
     </update>
+
+    <!-- 查询所有用户. -->
+    <select id="findAllUsers" resultType="com.mst.csuserservice.domain.model.User">
+        select * from t_user
+    </select>
 </mapper>

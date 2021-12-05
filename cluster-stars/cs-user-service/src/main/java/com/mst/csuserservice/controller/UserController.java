@@ -136,13 +136,15 @@ public class UserController {
 
     /**
      * 后台查询所有用户信息.
+     * @param  pageNum  page number
+     * @param  pageSize page size
      * @return ResultVO<UserDTO>
      */
     @SaCheckPermission("user-get")
-    @GetMapping("/get")
-    public ResultVO<UserDTO> findAllUsers() {
+    @GetMapping("/get/{pageNum}/{pageSize}")
+    public ResultVO<UserDTO> findAllUsers(@PathVariable int pageNum, @PathVariable int pageSize) {
         // 启动应用层获取全部用户信息.
-        UserDTO allUsers = userManager.findAllUsers();
+        UserDTO allUsers = userManager.findAllUsers(pageNum, pageSize);
         // 回调结果.
         return UserResultFactory.newResultForFindAllUser(allUsers);
     }

@@ -1,6 +1,7 @@
 package com.mst.csuserservice.infrastructure.factory;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
+import com.github.pagehelper.PageInfo;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
@@ -8,7 +9,6 @@ import com.mst.csuserservice.domain.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -114,12 +114,12 @@ public class UserDtoFactory {
 
     /**
      * 查询所有用户时创建DTO的封装.
-     * @param  list user info list
+     * @param  list user info list by page
      * @return UserDTO
      */
-    public static UserDTO newUserDtoForFindAll(final List<User> list) {
+    public static UserDTO newUserDtoForFindAll(final PageInfo<User> list) {
         UserDTO userDTO = new UserDTO();
-        if (!list.isEmpty()) {
+        if (!list.getList().isEmpty()) {
             userDTO.setUserList(list);
             userDTO.setMsg(true);
         } else {

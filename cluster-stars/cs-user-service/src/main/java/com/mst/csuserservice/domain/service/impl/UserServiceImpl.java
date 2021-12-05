@@ -3,6 +3,8 @@ package com.mst.csuserservice.domain.service.impl;
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
@@ -186,12 +188,15 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 后台查询所有用户.
-     *
+     * @param  pageNum    page number
+     * @param  pageSize   page size
      * @return user list
      */
     @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public PageInfo<User> findAllUsers(int pageNum, int pageSize) {
+        PageMethod.startPage(pageNum, pageSize);
+        List<User> userList = userMapper.findAllUsers();
+        return new PageInfo<>(userList);
     }
 
     /**
