@@ -19,7 +19,7 @@ public final class AccountConstant {
      */
     public static final int EMAIL_TYPE = 2;
     /**
-     * 账号类别: 微信第三方.
+     * 账号类别: 用户名.
      */
-    public static final int WECHAT_TYPE = 3;
+    public static final int NAME_TYPE = 3;
 }

@@ -38,6 +38,14 @@ public interface UserRepository {
     Optional<User> findByEmailAndPassword(String email, String password);
 
     /**
+     * 根据用户名和密码查找用户.
+     * @param  name     username
+     * @param  password password
+     * @return Optional User
+     */
+    Optional<User> findByNameAndPassword(String name, String password);
+
+    /**
      * 查找所用用户.
      * @return  user list
      */

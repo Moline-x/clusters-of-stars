@@ -1,6 +1,5 @@
 package com.mst.csuserservice.domain.service.strategy;
 
-import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.model.Account;
 
 import java.util.Optional;

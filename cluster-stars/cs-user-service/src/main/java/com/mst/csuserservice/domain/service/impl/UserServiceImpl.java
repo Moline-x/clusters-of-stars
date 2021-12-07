@@ -5,13 +5,13 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
-import com.mst.csuserservice.constant.AccountConstant;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
+import com.mst.csuserservice.domain.enums.AccountCategory;
 import com.mst.csuserservice.domain.enums.Role;
 import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.mapper.UserMapper;
@@ -24,7 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -89,6 +94,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginBO login(UserLoginQuery userLoginQuery) {
         SaTokenInfo saTokenInfo = null;
         List<String> permissionList = new ArrayList<>();
+        List<String> roleList = new ArrayList<>();
         // 重新设置loginQuery密码.
         userLoginQuery.setPassword(SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT));
         // 执行登录逻辑校验，得到账户容器.
@@ -102,10 +108,15 @@ public class UserServiceImpl implements UserService {
             Optional.ofNullable(account.getUserId()).ifPresent(StpUtil::login);
             // 获取权限列表
             permissionList = userGetPermission.getPermissionList(userId, null);
+            // 获取角色列表
+            roleList = userGetPermission.getRoleList(userId, null);
             // 获取当前登录用户的token info
             saTokenInfo = StpUtil.getTokenInfo();
         }
-        return UserLoginBO.builder().tokenInfo(saTokenInfo).permissionsList(permissionList).build();
+        return UserLoginBO.builder()
+                .tokenInfo(saTokenInfo)
+                .permissionsList(permissionList)
+                .rolesList(roleList).build();
     }
 
     /**
@@ -205,9 +216,11 @@ public class UserServiceImpl implements UserService {
     @PostConstruct
     public void loginDispatcherInit() {
         // 手机登录逻辑校验.
-        loginDispatcher.put(AccountConstant.PHONE_TYPE, u -> userLoginStrategyHandler(new UserMobileLoginStrategy(userRepository), u));
+        loginDispatcher.put(AccountCategory.PHONE_TYPE.getCode(), u -> userLoginStrategyHandler(new UserMobileLoginStrategy(userRepository), u));
         // 电子邮箱登录逻辑校验.
-        loginDispatcher.put(AccountConstant.EMAIL_TYPE, u -> userLoginStrategyHandler(new UserEmailLoginStrategy(userRepository), u));
+        loginDispatcher.put(AccountCategory.EMAIL_TYPE.getCode(), u -> userLoginStrategyHandler(new UserEmailLoginStrategy(userRepository), u));
+        // 用户名登录逻辑校验.
+        loginDispatcher.put(AccountCategory.NAME_TYPE.getCode(), u -> userLoginStrategyHandler(new UserNameLoginStrategy(userRepository), u));
     }
 
     /**

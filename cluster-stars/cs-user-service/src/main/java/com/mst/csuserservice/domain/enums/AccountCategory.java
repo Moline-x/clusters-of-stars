@@ -18,9 +18,9 @@ public enum AccountCategory {
      */
     EMAIL_TYPE(AccountConstant.EMAIL_TYPE),
     /**
-     * 微信.
+     * 用户名.
      */
-    WECHAT_TYPE(AccountConstant.WECHAT_TYPE);
+    NAME_TYPE(AccountConstant.NAME_TYPE);
 
     /**
      * 状态码.

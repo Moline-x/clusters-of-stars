@@ -26,4 +26,9 @@ public class UserLoginBO {
      * 权限列表.
      */
     private List<String> permissionsList;
+
+    /**
+     * 角色列表.
+     */
+    private List<String> rolesList;
 }
