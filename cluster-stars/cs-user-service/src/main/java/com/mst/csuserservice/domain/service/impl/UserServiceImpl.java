@@ -99,11 +99,13 @@ public class UserServiceImpl implements UserService {
         userLoginQuery.setPassword(SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT));
         // 执行登录逻辑校验，得到账户容器.
         Optional<Account> accountOptional = getLoginResult(userLoginQuery);
+        String openCode = null;
         // 如果账户存在
         if (accountOptional.isPresent()) {
             // 获取当前账户
             Account account = accountOptional.get();
             Long userId = account.getUserId();
+            openCode = account.getOpenCode();
             // 执行登录
             Optional.ofNullable(account.getUserId()).ifPresent(StpUtil::login);
             // 获取权限列表
@@ -115,6 +117,7 @@ public class UserServiceImpl implements UserService {
         }
         return UserLoginBO.builder()
                 .tokenInfo(saTokenInfo)
+                .openCode(openCode)
                 .permissionsList(permissionList)
                 .rolesList(roleList).build();
     }

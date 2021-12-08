@@ -57,7 +57,7 @@ public class UserManager {
     public UserDTO logout() {
         String loginId = (String) StpUtil.getLoginIdDefaultNull();
         // 注销会话.
-        StpUtil.logoutByLoginId(loginId);
+        StpUtil.logout(loginId);
         // 响应退出结果.
         return UserDtoFactory.newUserDtoForLogout(loginId);
     }

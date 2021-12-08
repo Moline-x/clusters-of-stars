@@ -23,6 +23,11 @@ public class UserLoginBO {
     private SaTokenInfo tokenInfo;
 
     /**
+     * 登录识别码.
+     */
+    private String openCode;
+
+    /**
      * 权限列表.
      */
     private List<String> permissionsList;

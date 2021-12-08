@@ -53,6 +53,7 @@ public class UserDtoFactory {
         tokenMap.put("token", tokenInfo.getTokenValue());
         tokenMap.put("tokenHead", tokenInfo.getTokenName());
         tokenMap.put("loginId", String.valueOf(tokenInfo.getLoginId()));
+        tokenMap.put("openCode", userLoginBO.getOpenCode());
         userDTO.setTokenMap(tokenMap);
         userDTO.setMsg(true);
         userDTO.setPermissions(userLoginBO.getPermissionsList());
