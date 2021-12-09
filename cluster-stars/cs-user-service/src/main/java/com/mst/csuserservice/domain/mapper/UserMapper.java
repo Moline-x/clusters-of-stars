@@ -1,6 +1,7 @@
 package com.mst.csuserservice.domain.mapper;
 
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -44,4 +45,11 @@ public interface UserMapper {
      * @return user list
      */
     List<User> findAllUsers();
+
+    /**
+     * 插入登录日志.
+     * @param  loginLog login log
+     * @return save count
+     */
+    int saveLoginLog(@Param("log") LoginLog loginLog);
 }

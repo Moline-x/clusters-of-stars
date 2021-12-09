@@ -1,6 +1,7 @@
 package com.mst.csuserservice.domain.bo;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
+import com.mst.csuserservice.domain.model.LoginLog;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -36,4 +37,9 @@ public class UserLoginBO {
      * 角色列表.
      */
     private List<String> rolesList;
+
+    /**
+     * 登录日志.
+     */
+    private LoginLog loginLog;
 }

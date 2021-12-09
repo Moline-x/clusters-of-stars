@@ -49,10 +49,11 @@ public class UserDtoFactory {
             userDTO.setMsg(false);
             return userDTO;
         }
+        String userId = String.valueOf(tokenInfo.getLoginId());
         Map<String, String> tokenMap = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
         tokenMap.put("token", tokenInfo.getTokenValue());
         tokenMap.put("tokenHead", tokenInfo.getTokenName());
-        tokenMap.put("loginId", String.valueOf(tokenInfo.getLoginId()));
+        tokenMap.put("loginId", userId);
         tokenMap.put("openCode", userLoginBO.getOpenCode());
         userDTO.setTokenMap(tokenMap);
         userDTO.setMsg(true);

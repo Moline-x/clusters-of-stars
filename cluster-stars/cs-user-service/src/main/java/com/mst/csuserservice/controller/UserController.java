@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Molin
  * @date   2021-11-19  23:30
@@ -48,9 +50,9 @@ public class UserController {
      * @return ResultVO
      */
     @PostMapping("/login")
-    public ResultVO<UserDTO> login(@RequestBody UserLoginQuery userLoginQuery) {
+    public ResultVO<UserDTO> login(HttpServletRequest request, @RequestBody UserLoginQuery userLoginQuery) {
         // 启动应用层执行登录查询.
-        UserDTO login = userManager.login(userLoginQuery);
+        UserDTO login = userManager.login(request, userLoginQuery);
         // 回调结果.
         return UserResultFactory.newResultForLogin(login);
     }

@@ -8,9 +8,14 @@ import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.domain.enums.UserState;
 import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.model.Account;
+import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.model.UserRole;
+import com.mst.csuserservice.domain.utils.IpUtil;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Molin
@@ -87,6 +92,29 @@ public class UserBuildFactory implements UserFactory {
                 .created(user.getCreated())
                 .mobile(userUpdateCommand.getMobile())
                 .email(userUpdateCommand.getEmail())
+                .build();
+    }
+
+    /**
+     * 根据UA构建Login log.
+     *
+     * @param request http request
+     * @return Login log information
+     */
+    @Override
+    public LoginLog buildLoginLog(HttpServletRequest request) {
+
+        // 获取UA.
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+
+        // 获取IP.
+        String ip = IpUtil.getIpAddress(request);
+
+        return LoginLog.builder()
+                .loginIp(IpUtil.ipToInteger(ip))
+                .clientType(userAgent.getOperatingSystem().getDeviceType().toString())
+                .osType(userAgent.getOperatingSystem().getName())
+                .browserType(userAgent.getBrowser().toString())
                 .build();
     }
 }

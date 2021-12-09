@@ -16,6 +16,7 @@ import com.mst.csuserservice.domain.enums.Role;
 import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.mapper.UserMapper;
 import com.mst.csuserservice.domain.model.Account;
+import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.repository.UserRepository;
 import com.mst.csuserservice.domain.service.UserService;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +97,7 @@ public class UserServiceImpl implements UserService {
         SaTokenInfo saTokenInfo = null;
         List<String> permissionList = new ArrayList<>();
         List<String> roleList = new ArrayList<>();
+        LoginLog loginLog = userLoginQuery.getLoginLog();
         // 重新设置loginQuery密码.
         userLoginQuery.setPassword(SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT));
         // 执行登录逻辑校验，得到账户容器.
@@ -108,6 +111,11 @@ public class UserServiceImpl implements UserService {
             openCode = account.getOpenCode();
             // 执行登录
             Optional.ofNullable(account.getUserId()).ifPresent(StpUtil::login);
+            loginLog.setUserId(userId);
+            loginLog.setLoginTime(new Date());
+            loginLog.setLoginType(1);
+            // 记录登录日志.
+            userMapper.saveLoginLog(loginLog);
             // 获取权限列表
             permissionList = userGetPermission.getPermissionList(userId, null);
             // 获取角色列表
@@ -118,6 +126,7 @@ public class UserServiceImpl implements UserService {
         return UserLoginBO.builder()
                 .tokenInfo(saTokenInfo)
                 .openCode(openCode)
+                .loginLog(loginLog)
                 .permissionsList(permissionList)
                 .rolesList(roleList).build();
     }

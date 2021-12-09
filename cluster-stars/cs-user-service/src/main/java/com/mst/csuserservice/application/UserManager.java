@@ -5,11 +5,16 @@ import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
+import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.service.UserService;
+import com.mst.csuserservice.infrastructure.factory.UserBuildFactory;
 import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Molin
@@ -43,7 +48,9 @@ public class UserManager {
      * @param  userLoginQuery  login query user
      * @return UserDTO
      */
-    public UserDTO login(UserLoginQuery userLoginQuery) {
+    public UserDTO login(HttpServletRequest request, UserLoginQuery userLoginQuery) {
+        // 封装日志.
+        userLoginQuery.setLoginLog(new UserBuildFactory().buildLoginLog(request));
         // 启动用户领域服务完成登录.
         UserLoginBO userLoginBO = userService.login(userLoginQuery);
         // 响应登录结果.

@@ -54,4 +54,11 @@
     <select id="findAllUsers" resultType="com.mst.csuserservice.domain.model.User">
         select * from t_user
     </select>
+
+    <!-- 插入登录日志. -->
+    <insert id="saveLoginLog">
+        insert into
+            user_login_log(user_id, login_time, login_ip, client_type, os_type, browser_type, login_address, login_type)
+        values (#{log.userId}, #{log.loginTime}, #{log.loginIp}, #{log.clientType}, #{log.osType}, #{log.browserType}, #{log.loginAddress}, #{log.loginType})
+    </insert>
 </mapper>

@@ -1,6 +1,7 @@
 package com.mst.csuserservice.controller.cqe.query;
 
 import com.mst.csuserservice.constant.UserConstant;
+import com.mst.csuserservice.domain.model.LoginLog;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -29,4 +30,9 @@ public class UserLoginQuery {
      * 登录类型
      */
     private int loginType;
+
+    /**
+     * 登录日志
+     */
+    private LoginLog loginLog;
 }
