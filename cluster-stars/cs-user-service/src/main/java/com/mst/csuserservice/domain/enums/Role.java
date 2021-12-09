@@ -22,7 +22,7 @@ public enum Role {
      */
     CUSTOMER(UserConstant.ROLE_CUSTOMER);
 
-    private Long code;
+    private final Long code;
 
     Role(Long code) {
         this.code = code;

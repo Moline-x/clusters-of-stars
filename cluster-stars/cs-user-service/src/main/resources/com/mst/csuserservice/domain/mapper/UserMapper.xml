@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mst.csuserservice.domain.mapper.UserMapper">
+
+    <!-- 根据用户id或角色id完成解除关联操作. -->
+    <update id="unBindUserAndRole">
+        update user_role
+        set deleted = #{deleted}, edited = now()
+        <where>
+            <choose>
+                <when test="command.roleId != null">
+                    user_id in
+                    <foreach collection="command.userIdList" open="(" close=")" separator="," item="userId">
+                        #{userId}
+                    </foreach>
+                    and
+                    role_id = #{command.roleId}
+                </when>
+                <otherwise>
+                    user_id in
+                    <foreach collection="command.userIdList" open="(" close=")" separator="," item="userId">
+                        #{userId}
+                    </foreach>
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+
+    <!-- 根据用户id列表删除用户. -->
+    <update id="removeUser">
+        update t_user
+        set deleted = #{deleted}, edited = now()
+        <where>
+            id in
+            <foreach collection="userIds" open="(" close=")" separator="," item="userId">
+                #{userId}
+            </foreach>
+        </where>
+    </update>
+
+    <!-- 根据用户id列表删除相关账户. -->
+    <update id="removeAccount">
+        update t_account
+        set deleted = #{deleted}, edited = now()
+        <where>
+            user_id in
+            <foreach collection="userIds" open="(" close=")" separator="," item="userId">
+                #{userId}
+            </foreach>
+        </where>
+    </update>
+
+    <!-- 查询所有用户. -->
+    <select id="findAllUsers" resultType="com.mst.csuserservice.domain.model.User">
+        select * from t_user
+    </select>
+
+    <!-- 插入登录日志. -->
+    <insert id="saveLoginLog">
+        insert into
+            user_login_log(user_id, login_time, login_ip, client_type, os_type, browser_type, login_address, login_type)
+        values (#{log.userId}, #{log.loginTime}, #{log.loginIp}, #{log.clientType}, #{log.osType}, #{log.browserType}, #{log.loginAddress}, #{log.loginType})
+    </insert>
+</mapper>

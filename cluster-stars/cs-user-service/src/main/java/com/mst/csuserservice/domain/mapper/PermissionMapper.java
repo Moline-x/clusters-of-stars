@@ -15,7 +15,7 @@ import java.util.List;
 public interface PermissionMapper extends BaseMapper<Permission> {
 
     /**
-     * 根据用户Id查找其关联角色权限.
+     * 根据用户Id查找其关联权限码.
      * @param  userId  user id
      * @return permission list
      */

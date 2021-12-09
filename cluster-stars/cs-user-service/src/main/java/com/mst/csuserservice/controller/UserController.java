@@ -1,6 +1,5 @@
 package com.mst.csuserservice.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.application.UserManager;
@@ -9,7 +8,13 @@ import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 
 import com.mst.csuserservice.infrastructure.factory.UserResultFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Molin
@@ -45,9 +50,9 @@ public class UserController {
      * @return ResultVO
      */
     @PostMapping("/login")
-    public ResultVO<UserDTO> login(@RequestBody UserLoginQuery userLoginQuery) {
+    public ResultVO<UserDTO> login(HttpServletRequest request, @RequestBody UserLoginQuery userLoginQuery) {
         // 启动应用层执行登录查询.
-        UserDTO login = userManager.login(userLoginQuery);
+        UserDTO login = userManager.login(request, userLoginQuery);
         // 回调结果.
         return UserResultFactory.newResultForLogin(login);
     }
@@ -75,30 +80,4 @@ public class UserController {
         }
         return "offline";
     }
-
-    /**
-     * 后台新建一个用户.
-     * @param  userCreateCommand  create user command
-     * @return ResultVO<UserDTO>
-     */
-    @SaCheckPermission("user-add")
-    @PostMapping("/create")
-    public ResultVO<UserDTO> createUser(@RequestBody UserCreateCommand userCreateCommand) {
-        // 启动应用层构建用户指令.
-        UserDTO addUser = userManager.createUser(userCreateCommand);
-        // 回调结果.
-        return UserResultFactory.newResultForCreateUser(addUser);
-    }
-
-    /**
-     * 后台删除一个用户.
-     * @param  userId  user id
-     * @return ResultVO<UserDTO>
-     */
-//    @SaCheckPermission("user-delete")
-//    @GetMapping("/remove")
-//    public ResultVO<UserDTO> removeUser(@RequestParam Long userId) {
-//        // 根据user id启动应用层删除用户指令
-//        // 回调结果.
-//    }
 }

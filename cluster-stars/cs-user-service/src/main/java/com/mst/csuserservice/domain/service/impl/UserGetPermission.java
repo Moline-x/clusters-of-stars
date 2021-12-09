@@ -2,6 +2,7 @@ package com.mst.csuserservice.domain.service.impl;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.mst.csuserservice.domain.mapper.PermissionMapper;
+import com.mst.csuserservice.domain.mapper.RoleMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,8 +17,11 @@ public class UserGetPermission implements StpInterface {
 
     private final PermissionMapper permissionMapper;
 
-    public UserGetPermission(PermissionMapper permissionMapper) {
+    private final RoleMapper roleMapper;
+
+    public UserGetPermission(PermissionMapper permissionMapper, RoleMapper roleMapper) {
         this.permissionMapper = permissionMapper;
+        this.roleMapper = roleMapper;
     }
 
     /**
@@ -32,8 +36,15 @@ public class UserGetPermission implements StpInterface {
         return permissionMapper.findPermissionsByUserId(Long.valueOf(loginId.toString()));
     }
 
+    /**
+     * 获取角色列表.
+     * @param  loginId user id
+     * @param  s       some args
+     * @return role list
+     */
     @Override
-    public List<String> getRoleList(Object o, String s) {
-        return null;
+    public List<String> getRoleList(Object loginId, String s) {
+        // 1. 根据用户id获取角色列表.
+        return roleMapper.findRolesByUserId(Long.valueOf(loginId.toString()));
     }
 }

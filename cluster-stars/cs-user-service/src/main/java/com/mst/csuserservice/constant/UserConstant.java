@@ -86,4 +86,48 @@ public final class UserConstant {
      * 后台创建用户失败提示语.
      */
     public static final String USER_CREATED_FAILED = "创建用户失败";
+    /**
+     * 解绑用户失败提示语.
+     */
+    public static final String USER_ID_NOT_NULL = "用户Id不能为空";
+    /**
+     * 解绑角色失败提示语.
+     */
+    public static final String ROLE_ID_NOT_NULL = "角色Id不能为空";
+    /**
+     * 删除flag.
+     */
+    public static final int DELETED = 1;
+    /**
+     * 未删除flag.
+     */
+    public static final int NOT_DELETED = 0;
+    /**
+     * 边界数量.
+     */
+    public static final int BOUNDARY_COUNT = 0;
+    /**
+     * 后台删除用户成功提示语.
+     */
+    public static final String USER_REMOVED_SUCCESS = "删除用户成功";
+    /**
+     * 后台删除用户失败提示语.
+     */
+    public static final String USER_REMOVED_FAILED = "删除用户失败";
+    /**
+     * 后台更新用户成功提示语.
+     */
+    public static final String USER_UPDATED_SUCCESS = "更新用户成功";
+    /**
+     * 后台更新用户失败提示语.
+     */
+    public static final String USER_UPDATED_FAILED = "更新用户失败";
+    /**
+     * 后台查询单个用户成功提示语.
+     */
+    public static final String USER_FOUND_SUCCESS = "查询用户成功";
+    /**
+     * 后台查询单个用户失败提示语.
+     */
+    public static final String USER_FOUND_FAILED = "查询用户失败";
 }

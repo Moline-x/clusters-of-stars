@@ -1,6 +1,7 @@
 package com.mst.csuserservice.infrastructure.factory;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
+import com.github.pagehelper.PageInfo;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
@@ -48,10 +49,12 @@ public class UserDtoFactory {
             userDTO.setMsg(false);
             return userDTO;
         }
+        String userId = String.valueOf(tokenInfo.getLoginId());
         Map<String, String> tokenMap = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
         tokenMap.put("token", tokenInfo.getTokenValue());
         tokenMap.put("tokenHead", tokenInfo.getTokenName());
-        tokenMap.put("loginId", String.valueOf(tokenInfo.getLoginId()));
+        tokenMap.put("loginId", userId);
+        tokenMap.put("openCode", userLoginBO.getOpenCode());
         userDTO.setTokenMap(tokenMap);
         userDTO.setMsg(true);
         userDTO.setPermissions(userLoginBO.getPermissionsList());
@@ -67,6 +70,59 @@ public class UserDtoFactory {
         UserDTO userDTO = new UserDTO();
         if (loginId != null) {
             userDTO.setUser(User.builder().name(loginId).build());
+            userDTO.setMsg(true);
+        } else {
+            userDTO.setMsg(false);
+        }
+        return userDTO;
+    }
+
+    /**
+     * 删除用户时创建UserDTO的封装.
+     * @param  removeResult  remove result
+     * @param  unbindResult  unbind result
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForRemove(final Boolean removeResult, final Boolean unbindResult) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setMsg(removeResult && unbindResult);
+        return userDTO;
+    }
+
+    /**
+     * 更新用户时创建UserDTO的封装.
+     * @param  user  user update info
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForUpdate(final User user) {
+        UserDTO userDTO = new UserDTO();
+        if (user != null) {
+            userDTO.setUser(user);
+            userDTO.setMsg(true);
+        } else {
+            userDTO.setMsg(false);
+        }
+        return userDTO;
+    }
+
+    /**
+     * 查询单个用户时创建UserDTO的封装.
+     * @param  user user info
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForFindOne(final User user) {
+        return newUserDtoForUpdate(user);
+    }
+
+    /**
+     * 查询所有用户时创建DTO的封装.
+     * @param  list user info list by page
+     * @return UserDTO
+     */
+    public static UserDTO newUserDtoForFindAll(final PageInfo<User> list) {
+        UserDTO userDTO = new UserDTO();
+        if (!list.getList().isEmpty()) {
+            userDTO.setUserList(list);
             userDTO.setMsg(true);
         } else {
             userDTO.setMsg(false);
