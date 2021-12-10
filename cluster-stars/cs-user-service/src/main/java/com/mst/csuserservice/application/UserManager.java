@@ -13,6 +13,8 @@ import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,7 +52,8 @@ public class UserManager {
      */
     public UserDTO login(HttpServletRequest request, UserLoginQuery userLoginQuery) {
         // 封装日志.
-        userLoginQuery.setLoginLog(new UserBuildFactory().buildLoginLog(request));
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        userLoginQuery.setLoginLog(new UserBuildFactory().buildLoginLog(httpServletRequest));
         // 启动用户领域服务完成登录.
         UserLoginBO userLoginBO = userService.login(userLoginQuery);
         // 响应登录结果.

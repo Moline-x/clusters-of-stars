@@ -3,7 +3,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://172.17.0.2:7001/eureka
+      defaultZone: http://106.75.66.14:7001/eureka
     register-with-eureka: true
     fetch-registry: true
   instance:
@@ -18,7 +18,7 @@ spring:
         - id: cs-routes-user
           uri: lb://cs-user-service
           predicates:
-            - Path=/user/**
+            - Path=/user/**,/sys_user/**
           filters:
             - StripPrefix=1
       filter:

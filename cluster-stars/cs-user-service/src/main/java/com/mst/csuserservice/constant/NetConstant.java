@@ -11,6 +11,16 @@ public class NetConstant {
     }
 
     /**
+     * 本机ipv6回环地址.
+     */
+    public static final String LOCAL_NETCONST = "0:0:0:0:0:0:0:1";
+
+    /**
+     * 本机回环IP地址.
+     */
+    public static final String LOCAL_HOST_IP = "127.0.0.1";
+
+    /**
      * 未知IP地址标识.
      */
     public static final String UNKNOWN_IP = "unknown";
