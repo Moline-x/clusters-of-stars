@@ -64,20 +64,4 @@ public class IpUtil {
         return ipFour;
     }
 
-    /**
-     * 整型ip解码.
-     * @param  ip ip integer
-     * @return ip string
-     */
-    public static String integerToIp(Integer ip){
-        //思路很简单，每8位拿一次，就是对应位的IP
-        StringBuilder sb = new StringBuilder();
-        for(int i = 3; i >= 0; i--){
-            int ipa = (ip >> (8 * i)) & (0xff);
-            sb.append(ipa).append(".");
-        }
-        sb.delete(sb.length() - 1, sb.length());
-        return sb.toString();
-    }
-
 }
