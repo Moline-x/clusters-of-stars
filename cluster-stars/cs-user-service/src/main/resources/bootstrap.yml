@@ -17,7 +17,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
 #    &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false
 #    url: jdbc:mysql://172.17.0.1:3307/csuser_test?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    url: jdbc:mysql://106.75.66.14:3307/csuser_test?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8
+    url: jdbc:mysql://106.75.66.14:3307/csuser_test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
     username: molin
     password: cmlwxt1231
     initial-size: 5
