@@ -1,5 +1,6 @@
 package com.mst.csuserservice.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.application.UserManager;
 import com.mst.csuserservice.controller.component.ResultVO;
@@ -7,10 +8,13 @@ import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 
 import com.mst.csuserservice.infrastructure.factory.UserResultFactory;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Molin
@@ -46,10 +50,34 @@ public class UserController {
      * @return ResultVO
      */
     @PostMapping("/login")
-    public ResultVO<UserDTO> login(@RequestBody UserLoginQuery userLoginQuery) {
+    public ResultVO<UserDTO> login(HttpServletRequest request, @RequestBody UserLoginQuery userLoginQuery) {
         // 启动应用层执行登录查询.
-        UserDTO login = userManager.login(userLoginQuery);
+        UserDTO login = userManager.login(request, userLoginQuery);
         // 回调结果.
         return UserResultFactory.newResultForLogin(login);
+    }
+
+    /**
+     * 退出.
+     * @return ResultVO
+     */
+    @GetMapping("/logout")
+    public ResultVO<UserDTO> logout() {
+        // 启动应用层执行会话退出.
+        UserDTO logout = userManager.logout();
+        // 回调结果.
+        return UserResultFactory.newResultForLogout(logout);
+    }
+
+    /**
+     * 测试是否登录.
+     * @return ResultVO<String>
+     */
+    @GetMapping("/isLogin")
+    public String isLogIn() {
+        if (StpUtil.isLogin()) {
+            return "online";
+        }
+        return "offline";
     }
 }

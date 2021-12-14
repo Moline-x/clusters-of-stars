@@ -1,5 +1,6 @@
 package com.mst.csuserservice.application.dto;
 
+import com.github.pagehelper.PageInfo;
 import com.mst.csuserservice.domain.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,4 +34,8 @@ public class UserDTO {
      * 权限列表.
      */
     private List<String> permissions;
+    /**
+     * 用户列表.
+     */
+    private PageInfo<User> userList;
 }

@@ -1,9 +1,14 @@
 package com.mst.csuserservice.domain.factory;
 
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.domain.model.Account;
+import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.model.UserRole;
+import eu.bitwalker.useragentutils.UserAgent;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Molin
@@ -41,4 +46,19 @@ public interface UserFactory {
      * @return UserRole
      */
     UserRole buildUserRole(Long userId, Long roleId);
+
+    /**
+     * 根据指令更新实体.
+     * @param  userUpdateCommand user update command
+     * @param  user              user
+     * @return User
+     */
+    User buildUser(UserUpdateCommand userUpdateCommand, User user);
+
+    /**
+     * 根据UA构建Login log.
+     * @param  request http request
+     * @return Login log information
+     */
+    LoginLog buildLoginLog(HttpServletRequest request);
 }

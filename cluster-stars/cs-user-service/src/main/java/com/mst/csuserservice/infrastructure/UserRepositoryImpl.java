@@ -76,6 +76,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     /**
+     * 根据用户名和密码查找用户.
+     * @param name     username
+     * @param password password
+     * @return Optional User
+     */
+    @Override
+    public Optional<User> findByNameAndPassword(String name, String password) {
+        User user = jpaUserRepository.findByNameAndPassword(name, password);
+        if (user != null) {
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * 查找所用用户.
      * @return  user list
      */
@@ -140,5 +155,16 @@ public class UserRepositoryImpl implements UserRepository {
             return Optional.of(user);
         }
         return Optional.empty();
+    }
+
+    /**
+     * 根据id查找用户.
+     *
+     * @param userId 用户id
+     * @return Optional User
+     */
+    @Override
+    public User findUserById(Long userId) {
+        return jpaUserRepository.getOne(userId);
     }
 }

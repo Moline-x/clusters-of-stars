@@ -20,7 +20,7 @@ public enum UserState {
     /**
      * 状态值.
      */
-    private int code;
+    private final int code;
 
     UserState(int code) {
         this.code = code;

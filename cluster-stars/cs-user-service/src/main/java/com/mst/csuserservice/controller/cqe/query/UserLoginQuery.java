@@ -1,6 +1,7 @@
 package com.mst.csuserservice.controller.cqe.query;
 
 import com.mst.csuserservice.constant.UserConstant;
+import com.mst.csuserservice.domain.model.LoginLog;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -23,16 +24,15 @@ public class UserLoginQuery {
      * 手机号
      */
     @NotNull(message = UserConstant.MOBILE_NOT_NULL)
-    private String mobile;
-
-    /**
-     * 电子邮箱
-     */
-    @NotNull(message = UserConstant.EMAIL_NOT_NULL)
-    private String email;
+    private String name;
 
     /**
      * 登录类型
      */
     private int loginType;
+
+    /**
+     * 登录日志
+     */
+    private LoginLog loginLog;
 }

@@ -7,23 +7,23 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author Molin
- * @date   2021-11-20  09:31
- * 用户创建指令
+ * @date 2021/12/3  13:07
+ * class description: 用户更新信息指令
  */
 @Data
-public class UserCreateCommand {
+public class UserUpdateCommand {
+
+    /**
+     * 用户id
+     */
+    @NotNull(message = UserConstant.USER_ID_NOT_NULL)
+    private Long id;
 
     /**
      * 用户名
      */
     @NotNull(message = UserConstant.NAME_NOT_NULL)
     private String name;
-
-    /**
-     * 密码
-     */
-    @NotNull(message = UserConstant.PWD_NOT_NULL)
-    private String password;
 
     /**
      * 手机号

@@ -38,6 +38,14 @@ public interface UserRepository {
     Optional<User> findByEmailAndPassword(String email, String password);
 
     /**
+     * 根据用户名和密码查找用户.
+     * @param  name     username
+     * @param  password password
+     * @return Optional User
+     */
+    Optional<User> findByNameAndPassword(String name, String password);
+
+    /**
      * 查找所用用户.
      * @return  user list
      */
@@ -77,4 +85,11 @@ public interface UserRepository {
      * @return Optional User
      */
     Optional<User> findByMobileAndEmail(String mobile, String email);
+
+    /**
+     * 根据id查找用户.
+     * @param  userId  用户id
+     * @return Optional User
+     */
+    User findUserById(Long userId);
 }

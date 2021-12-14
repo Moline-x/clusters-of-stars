@@ -3,14 +3,20 @@ package com.mst.csuserservice.domain.service.impl;
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import com.mst.csuserservice.constant.AccountConstant;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
+import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
+import com.mst.csuserservice.domain.enums.AccountCategory;
 import com.mst.csuserservice.domain.enums.Role;
 import com.mst.csuserservice.domain.factory.UserFactory;
+import com.mst.csuserservice.domain.mapper.UserMapper;
 import com.mst.csuserservice.domain.model.Account;
+import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.repository.UserRepository;
 import com.mst.csuserservice.domain.service.UserService;
@@ -19,7 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -34,18 +46,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserFactory userFactory;
 
-    private UserLoginStrategy userLoginStrategy;
-
     private final UserGetPermission userGetPermission;
+
+    private final UserMapper userMapper;
 
     private final Map<Integer, Function<UserLoginQuery, Optional<Account>>> loginDispatcher = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
 
     public UserServiceImpl(UserRepository userRepository,
                            UserFactory userFactory,
-                           UserGetPermission userGetPermission) {
+                           UserGetPermission userGetPermission,
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
         this.userGetPermission = userGetPermission;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -82,23 +96,130 @@ public class UserServiceImpl implements UserService {
     public UserLoginBO login(UserLoginQuery userLoginQuery) {
         SaTokenInfo saTokenInfo = null;
         List<String> permissionList = new ArrayList<>();
+        List<String> roleList = new ArrayList<>();
+        LoginLog loginLog = userLoginQuery.getLoginLog();
         // 重新设置loginQuery密码.
         userLoginQuery.setPassword(SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT));
         // 执行登录逻辑校验，得到账户容器.
         Optional<Account> accountOptional = getLoginResult(userLoginQuery);
+        String openCode = null;
         // 如果账户存在
         if (accountOptional.isPresent()) {
             // 获取当前账户
             Account account = accountOptional.get();
             Long userId = account.getUserId();
+            openCode = account.getOpenCode();
             // 执行登录
-            Optional.ofNullable(account.getOpenCode()).ifPresent(StpUtil::login);
+            Optional.ofNullable(account.getUserId()).ifPresent(StpUtil::login);
+            loginLog.setUserId(userId);
+            loginLog.setLoginTime(new Date());
+            loginLog.setLoginType(1);
+            // 记录登录日志.
+            userMapper.saveLoginLog(loginLog);
             // 获取权限列表
             permissionList = userGetPermission.getPermissionList(userId, null);
+            // 获取角色列表
+            roleList = userGetPermission.getRoleList(userId, null);
             // 获取当前登录用户的token info
             saTokenInfo = StpUtil.getTokenInfo();
         }
-        return UserLoginBO.builder().tokenInfo(saTokenInfo).permissionsList(permissionList).build();
+        return UserLoginBO.builder()
+                .tokenInfo(saTokenInfo)
+                .openCode(openCode)
+                .loginLog(loginLog)
+                .permissionsList(permissionList)
+                .rolesList(roleList).build();
+    }
+
+    /**
+     * 后台创建用户服务.
+     * @param  userCreateCommand  create user command
+     * @return User
+     */
+    @Override
+    public User createUser(UserCreateCommand userCreateCommand) {
+        // 判断后台是否已添加过该用户.
+        User newUser = null;
+        Optional<User> user = userRepository.findByMobileAndEmail(userCreateCommand.getMobile(), userCreateCommand.getEmail());
+        // 如果用户已存在，则直接响应回应用层，如果不存在，则保存用户信息.
+        if (user.isEmpty()) {
+            // 补全用户信息，构建用户实体，将用户实体持久化入数据库.
+            newUser = userRepository.saveUser(userFactory.buildUser(userCreateCommand));
+            Long userId = newUser.getId();
+            // 将user id按策略生成openCode，并持久化入数据库.
+            String openCode = userFactory.buildOpenCode(userId);
+            Account account = userFactory.buildAccount(openCode, userId);
+            userRepository.saveAccount(account);
+            // 根据角色Id建立用户与角色关系.
+            userRepository.saveRoleUser(userFactory.buildUserRole(userId, userCreateCommand.getRoleId()));
+        }
+        return newUser;
+    }
+
+    /**
+     * 根据用户id删除用户操作.
+     * @param  userIds  user id list
+     * @return true or false
+     */
+    @Override
+    public Boolean removeUser(List<Long> userIds) {
+        // 1. 删除用户账户.
+        int removeAccountCount = userMapper.removeAccount(userIds, UserConstant.DELETED);
+        // 2. 删除用户.
+        int removeUserCount = UserConstant.BOUNDARY_COUNT;
+        if (removeAccountCount > UserConstant.BOUNDARY_COUNT) {
+            removeUserCount = userMapper.removeUser(userIds, UserConstant.DELETED);
+        }
+        return removeAccountCount > UserConstant.BOUNDARY_COUNT
+                && removeUserCount > UserConstant.BOUNDARY_COUNT;
+    }
+
+    /**
+     * 根据用户id或角色id解除绑定.
+     * @param  userUnBindCommand  user unbind command
+     * @return true or false
+     */
+    @Override
+    public Boolean unBindUserAndRole(UserUnBindCommand userUnBindCommand) {
+        int count = userMapper.unBindUserAndRole(userUnBindCommand, UserConstant.DELETED);
+        return count > UserConstant.BOUNDARY_COUNT;
+    }
+
+    /**
+     * 更新用户.
+     * @param  userUpdateCommand  user update command
+     * @return User
+     */
+    @Override
+    public User updateUser(UserUpdateCommand userUpdateCommand) {
+        // 根据id查找用户.
+        User user = userRepository.findUserById(userUpdateCommand.getId());
+        // 补全用户信息，并更新进数据库.
+        return userRepository.saveUser(userFactory.buildUser(userUpdateCommand, user));
+    }
+
+    /**
+     * 后台根据id查询用户.
+     *
+     * @param  id user id
+     * @return User
+     */
+    @Override
+    public User findUserById(Long id) {
+        return userRepository.findUserById(id);
+    }
+
+    /**
+     * 后台查询所有用户.
+     * @param  pageNum    page number
+     * @param  pageSize   page size
+     * @return user list
+     */
+    @Override
+    public PageInfo<User> findAllUsers(int pageNum, int pageSize) {
+        PageMethod.startPage(pageNum, pageSize);
+        List<User> userList = userMapper.findAllUsers();
+        return new PageInfo<>(userList);
     }
 
     /**
@@ -107,25 +228,26 @@ public class UserServiceImpl implements UserService {
     @PostConstruct
     public void loginDispatcherInit() {
         // 手机登录逻辑校验.
-        loginDispatcher.put(AccountConstant.PHONE_TYPE, u -> {
-            userLoginStrategy = new UserMobileLoginStrategy(userRepository);
-            Optional<Long> uid = userLoginStrategy.findUser(u.getMobile(), u.getPassword());
-            Optional<Account> account = Optional.empty();
-            if (uid.isPresent()) {
-                account = userLoginStrategy.findAccount(AccountConstant.PHONE_TYPE, uid.get());
-            }
-            return account;
-        });
+        loginDispatcher.put(AccountCategory.PHONE_TYPE.getCode(), u -> userLoginStrategyHandler(new UserMobileLoginStrategy(userRepository), u));
         // 电子邮箱登录逻辑校验.
-        loginDispatcher.put(AccountConstant.EMAIL_TYPE, u -> {
-            userLoginStrategy = new UserEmailLoginStrategy(userRepository);
-            Optional<Long> uid = userLoginStrategy.findUser(u.getEmail(), u.getPassword());
-            Optional<Account> account = Optional.empty();
-            if (uid.isPresent()) {
-                account = userLoginStrategy.findAccount(AccountConstant.EMAIL_TYPE, uid.get());
-            }
-            return account;
-        });
+        loginDispatcher.put(AccountCategory.EMAIL_TYPE.getCode(), u -> userLoginStrategyHandler(new UserEmailLoginStrategy(userRepository), u));
+        // 用户名登录逻辑校验.
+        loginDispatcher.put(AccountCategory.NAME_TYPE.getCode(), u -> userLoginStrategyHandler(new UserNameLoginStrategy(userRepository), u));
+    }
+
+    /**
+     * 执行用户登录策略.
+     * @param  userLoginStrategy  用户登录策略
+     * @param  userLoginQuery     用户登录查询对象
+     * @return Optional<Account>
+     */
+    public Optional<Account> userLoginStrategyHandler(UserLoginStrategy userLoginStrategy, UserLoginQuery userLoginQuery) {
+        Optional<Long> uid = userLoginStrategy.findUser(userLoginQuery.getName(), userLoginQuery.getPassword());
+        Optional<Account> account = Optional.empty();
+        if (uid.isPresent()) {
+            account = userLoginStrategy.findAccount(userLoginQuery.getLoginType(), uid.get());
+        }
+        return account;
     }
 
     /**
