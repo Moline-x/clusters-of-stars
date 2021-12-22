@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
+import com.google.common.collect.Lists;
 import com.mst.csuserservice.constant.UserConstant;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
@@ -22,11 +23,9 @@ import com.mst.csuserservice.domain.repository.UserRepository;
 import com.mst.csuserservice.domain.service.UserService;
 import com.mst.csuserservice.domain.service.strategy.UserLoginStrategy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,43 +91,64 @@ public class UserServiceImpl implements UserService {
      * @return  token和permission list
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public UserLoginBO login(UserLoginQuery userLoginQuery) {
-        SaTokenInfo saTokenInfo = null;
-        List<String> permissionList = new ArrayList<>();
-        List<String> roleList = new ArrayList<>();
-        LoginLog loginLog = userLoginQuery.getLoginLog();
+
         // 重新设置loginQuery密码.
         userLoginQuery.setPassword(SaSecureUtil.md5BySalt(userLoginQuery.getPassword(), UserConstant.PWD_SALT));
         // 执行登录逻辑校验，得到账户容器.
         Optional<Account> accountOptional = getLoginResult(userLoginQuery);
-        String openCode = null;
         // 如果账户存在
-        if (accountOptional.isPresent()) {
-            // 获取当前账户
-            Account account = accountOptional.get();
-            Long userId = account.getUserId();
-            openCode = account.getOpenCode();
-            // 执行登录
-            Optional.ofNullable(account.getUserId()).ifPresent(StpUtil::login);
-            loginLog.setUserId(userId);
-            loginLog.setLoginTime(new Date());
-            loginLog.setLoginType(1);
-            // 记录登录日志.
-            userMapper.saveLoginLog(loginLog);
-            // 获取权限列表
-            permissionList = userGetPermission.getPermissionList(userId, null);
-            // 获取角色列表
-            roleList = userGetPermission.getRoleList(userId, null);
-            // 获取当前登录用户的token info
-            saTokenInfo = StpUtil.getTokenInfo();
-        }
+        Optional<Long> userId = accountOptional.map(Account::getUserId);
+        // 执行登录
+        userId.ifPresent(StpUtil::login);
+        // 获取当前登录用户的token info
+        Optional<SaTokenInfo> saTokenInfo = userId.map(u -> StpUtil.getTokenInfo());
+
         return UserLoginBO.builder()
                 .tokenInfo(saTokenInfo)
-                .openCode(openCode)
-                .loginLog(loginLog)
-                .permissionsList(permissionList)
-                .rolesList(roleList).build();
+                .loginId(userId).build();
+    }
+
+    /**
+     * 记录登录日志.
+     * @param  loginLog login log
+     * @param  userId   user id
+     */
+    @Override
+    public void saveLoginLog(LoginLog loginLog, Long userId) {
+        loginLog.setUserId(userId);
+        loginLog.setLoginTime(new Date());
+        loginLog.setLoginType(UserConstant.ENABLE_CODE);
+        // 记录登录日志.
+        userMapper.saveLoginLog(loginLog);
+    }
+
+    /**
+     * 获取权限列表.
+     *
+     * @param userId user id
+     * @return permission list
+     */
+    @Override
+    public List<String> getPermissionList(Long userId) {
+
+        return Optional.ofNullable(userId)
+                .map(u -> userGetPermission.getPermissionList(u, null))
+                .orElseGet(Lists::newArrayList);
+    }
+
+    /**
+     * 获取角色列表.
+     *
+     * @param userId user id
+     * @return role list
+     */
+    @Override
+    public List<String> getRoleList(Long userId) {
+
+        return Optional.ofNullable(userId)
+                .map(u -> userGetPermission.getRoleList(u, null))
+                .orElseGet(Lists::newArrayList);
     }
 
     /**
@@ -242,12 +262,10 @@ public class UserServiceImpl implements UserService {
      * @return Optional<Account>
      */
     public Optional<Account> userLoginStrategyHandler(UserLoginStrategy userLoginStrategy, UserLoginQuery userLoginQuery) {
+
         Optional<Long> uid = userLoginStrategy.findUser(userLoginQuery.getName(), userLoginQuery.getPassword());
-        Optional<Account> account = Optional.empty();
-        if (uid.isPresent()) {
-            account = userLoginStrategy.findAccount(userLoginQuery.getLoginType(), uid.get());
-        }
-        return account;
+
+        return uid.flatMap(u -> userLoginStrategy.findAccount(userLoginQuery.getLoginType(), u));
     }
 
     /**
@@ -259,9 +277,6 @@ public class UserServiceImpl implements UserService {
         // 根据登录策略获取登录逻辑校验.
         Function<UserLoginQuery, Optional<Account>> loginResult = loginDispatcher.get(userLoginQuery.getLoginType());
         // 执行登录逻辑校验.
-        if (loginResult != null) {
-            return loginResult.apply(userLoginQuery);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(loginResult).flatMap(l -> l.apply(userLoginQuery));
     }
 }

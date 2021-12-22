@@ -46,11 +46,18 @@ public class UserManager {
      * @param  userLoginQuery  login query user
      * @return UserDTO
      */
+    @Transactional(rollbackFor = Exception.class)
     public UserDTO login(HttpServletRequest request, UserLoginQuery userLoginQuery) {
-        // 封装日志.
-        userLoginQuery.setLoginLog(new UserBuildFactory().buildLoginLog(request));
+
         // 启动用户领域服务完成登录.
         UserLoginBO userLoginBO = userService.login(userLoginQuery);
+        // 封装日志.
+        userLoginBO.getLoginId().ifPresent(id -> {
+            // 获取权限与角色列表.
+            userLoginBO.setPermissionsList(userService.getPermissionList(id));
+            userLoginBO.setRolesList(userService.getRoleList(id));
+            userService.saveLoginLog(new UserBuildFactory().buildLoginLog(request), id);
+        });
         // 响应登录结果.
         return UserDtoFactory.newUserDtoForLogin(userLoginBO);
     }
