@@ -69,19 +69,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(UserCreateCommand userCreateCommand) {
         // 判断是否已注册.
-        User register = null;
         Optional<User> user = userRepository.findByMobileAndEmail(userCreateCommand.getMobile(), userCreateCommand.getEmail());
-        // 如果用户已存在，则直接响应回应用层，如果不存在，则保存用户信息.
-        if (user.isEmpty()) {
-            // 补全用户信息，构建用户实体，将用户实体持久化入数据库.
-            register = userRepository.saveUser(userFactory.buildUser(userCreateCommand));
-            // 将user id按策略生成openCode，并持久化入数据库.
-            String openCode = userFactory.buildOpenCode(register.getId());
-            Account account = userFactory.buildAccount(openCode, register.getId());
-            userRepository.saveAccount(account);
-            // 建立用户与角色关系.
-            userRepository.saveRoleUser(userFactory.buildUserRole(register.getId(), Role.CUSTOMER.getCode()));
-        }
+        // 如果用户已存在，则直接响应回应用层, 如果不存在，则保存用户信息.
+        return user.isEmpty() ? user.orElseGet(() -> saveUserInfo(userCreateCommand)) : null;
+    }
+
+    /**
+     * 存储用户信息.
+     * @param  userCreateCommand create user command
+     * @return User
+     */
+    private User saveUserInfo(UserCreateCommand userCreateCommand) {
+        // 补全用户信息，构建用户实体，将用户实体持久化入数据库.
+        var register = userRepository.saveUser(userFactory.buildUser(userCreateCommand));
+        Long id = Optional.ofNullable(register).map(User::getId).orElse(UserConstant.ROLE_SUPER_ADMIN);
+        // 按策略生成openCode，并持久化入数据库.
+        userRepository.saveAccount(userFactory.buildAccount(userFactory.buildOpenCode(id), id));
+        // 建立用户与角色关系.
+        userRepository.saveRoleUser(userFactory.buildUserRole(id, Role.CUSTOMER.getCode()));
         return register;
     }
 
@@ -158,22 +163,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createUser(UserCreateCommand userCreateCommand) {
-        // 判断后台是否已添加过该用户.
-        User newUser = null;
-        Optional<User> user = userRepository.findByMobileAndEmail(userCreateCommand.getMobile(), userCreateCommand.getEmail());
-        // 如果用户已存在，则直接响应回应用层，如果不存在，则保存用户信息.
-        if (user.isEmpty()) {
-            // 补全用户信息，构建用户实体，将用户实体持久化入数据库.
-            newUser = userRepository.saveUser(userFactory.buildUser(userCreateCommand));
-            Long userId = newUser.getId();
-            // 将user id按策略生成openCode，并持久化入数据库.
-            String openCode = userFactory.buildOpenCode(userId);
-            Account account = userFactory.buildAccount(openCode, userId);
-            userRepository.saveAccount(account);
-            // 根据角色Id建立用户与角色关系.
-            userRepository.saveRoleUser(userFactory.buildUserRole(userId, userCreateCommand.getRoleId()));
-        }
-        return newUser;
+        return register(userCreateCommand);
     }
 
     /**
