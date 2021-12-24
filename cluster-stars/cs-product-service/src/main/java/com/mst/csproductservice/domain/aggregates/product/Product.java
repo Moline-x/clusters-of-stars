@@ -1,18 +1,26 @@
 package com.mst.csproductservice.domain.aggregates.product;
 
 import com.google.common.base.Objects;
+import com.mst.csproductservice.application.command.CreateProductCommand;
+import com.mst.csproductservice.constant.ProductConstant;
+import com.mst.csproductservice.domain.aggregates.product.valueobject.ProductNumber;
+import com.mst.csproductservice.domain.aggregates.product.valueobject.enums.ProductStatusEnum;
 import com.mst.csproductservice.domain.common.BaseEntity;
+import com.mst.csproductservice.domain.common.model.Price;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.math.BigDecimal;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * @author Molin
@@ -36,7 +44,8 @@ public class Product extends BaseEntity {
      * 商品编码.
      */
     @Column(name = "product_no", length = 32, nullable = false, unique = true)
-    private String productNo;
+    @Type(type = "com.mst.csproductservice.domain.aggregates.product.converter.ProductNumber")
+    private ProductNumber productNo;
 
     /**
      * 商品名称.
@@ -47,8 +56,8 @@ public class Product extends BaseEntity {
     /**
      * 商品价格.
      */
-    @Column(name = "price", precision = 10, scale = 2)
-    private BigDecimal price;
+    @Embedded
+    private Price price;
 
     /**
      * 分类id.
@@ -60,7 +69,7 @@ public class Product extends BaseEntity {
      * 商品状态.
      */
     @Column(name = "product_status", nullable = false)
-    private Integer productStatus;
+    private ProductStatusEnum productStatus;
 
     /**
      * 备注.
@@ -76,18 +85,22 @@ public class Product extends BaseEntity {
 
     /**
      * 构建商品.
-     * @param  productNo            product no
-     * @param  name                 product name
-     * @param  price                product price
-     * @param  categoryId           category id
-     * @param  productStatus        product status
-     * @param  remark               remark
-     * @param  allowAcrossCategory  allow across category or not
+     * @param  command create product command
      * @return Product
      */
-    public static Product of(String productNo, String name, BigDecimal price, Integer categoryId
-            , Integer productStatus, String remark, Boolean allowAcrossCategory) {
-        return new Product(null, productNo, name, price, categoryId, productStatus, remark, allowAcrossCategory);
+    public static Product of(CreateProductCommand command) {
+
+        Integer categoryId = command.getCategoryId();
+        checkArgument(!StringUtils.isEmpty(command.getName()), ProductConstant.PRODUCT_NAME_NOT_NULL);
+        checkArgument(categoryId != null, ProductConstant.CATEGORY_NOT_NULL);
+        checkArgument(categoryId > 0, ProductConstant.CATEGORY_LARGER_ZERO);
+        checkArgument(categoryId < 10000, ProductConstant.CATEGORY_LESSER_TEN_K);
+        checkArgument(command.getAllowAcrossCategory() != null, ProductConstant.ALLOW_ACROSS_CATEGORY_NOT_NULL);
+        ProductNumber newProductNo = ProductNumber.of(categoryId);
+        ProductStatusEnum defaultStatus = ProductStatusEnum.DRAFTED;
+        Price priceWithCurrency = Price.of(command.getCurrencyCode(), command.getPrice());
+        return new Product(null, newProductNo, command.getName(), priceWithCurrency,
+                categoryId, defaultStatus, command.getRemark(), command.getAllowAcrossCategory());
     }
 
     @Override
