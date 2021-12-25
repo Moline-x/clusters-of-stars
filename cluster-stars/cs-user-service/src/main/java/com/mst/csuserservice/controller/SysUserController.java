@@ -9,6 +9,8 @@ import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.controller.cqe.query.UserQuery;
+import com.mst.csuserservice.domain.model.PageParam;
 import com.mst.csuserservice.infrastructure.factory.UserResultFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -109,15 +111,14 @@ public class SysUserController {
 
     /**
      * 后台查询所有用户信息.
-     * @param  pageNum  page number
-     * @param  pageSize page size
+     * @param  userQuery user query parameter
      * @return ResultVO<UserDTO>
      */
     @SaCheckPermission(value = "user-get", orRole = {"super-admin","admin"})
-    @GetMapping("/get/{pageNum}/{pageSize}")
-    public ResultVO<UserDTO> findAllUsers(@PathVariable int pageNum, @PathVariable int pageSize) {
+    @PostMapping("/getPage")
+    public ResultVO<UserDTO> findAllUsersByPage(@RequestBody PageParam<UserQuery> userQuery) {
         // 启动应用层获取全部用户信息.
-        UserDTO allUsers = sysUserManager.findAllUsers(pageNum, pageSize);
+        UserDTO allUsers = sysUserManager.findAllUsersByPage(userQuery);
         // 回调结果.
         return UserResultFactory.newResultForFindAllUser(allUsers);
     }

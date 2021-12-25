@@ -11,6 +11,7 @@ import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.controller.cqe.query.UserQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.enums.AccountCategory;
 import com.mst.csuserservice.domain.enums.Role;
@@ -268,5 +269,16 @@ public class UserServiceImpl implements UserService {
         Function<UserLoginQuery, Optional<Account>> loginResult = loginDispatcher.get(userLoginQuery.getLoginType());
         // 执行登录逻辑校验.
         return Optional.ofNullable(loginResult).flatMap(l -> l.apply(userLoginQuery));
+    }
+
+    /**
+     * 集合查询.
+     *
+     * @param param 查询参数
+     * @return 查询响应
+     */
+    @Override
+    public List<User> list(UserQuery param) {
+        return userMapper.findAllUsers();
     }
 }

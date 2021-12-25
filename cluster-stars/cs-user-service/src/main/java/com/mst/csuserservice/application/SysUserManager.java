@@ -5,6 +5,8 @@ import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
+import com.mst.csuserservice.controller.cqe.query.UserQuery;
+import com.mst.csuserservice.domain.model.PageParam;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.service.UserService;
 import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
@@ -80,13 +82,12 @@ public class SysUserManager {
 
     /**
      * 后台查询所有用户.
-     * @param  pageNum   page number
-     * @param  pageSize  page size
+     * @param  userQuery user query parameters
      * @return UserDTO
      */
-    public UserDTO findAllUsers(int pageNum, int pageSize) {
+    public UserDTO findAllUsersByPage(PageParam<UserQuery> userQuery) {
         // 启动用户领域服务完成查询所有用户记录操作.
-        PageInfo<User> userList = userService.findAllUsers(pageNum, pageSize);
+        PageInfo<User> userList = userService.page(userQuery);
         // 响应查询结果.
         return UserDtoFactory.newUserDtoForFindAll(userList);
     }

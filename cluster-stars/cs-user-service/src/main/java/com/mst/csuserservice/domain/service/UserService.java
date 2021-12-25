@@ -5,6 +5,7 @@ import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.controller.cqe.query.UserQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
 import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
@@ -16,7 +17,7 @@ import java.util.List;
  * @date   2021-11-19  22:45
  * 用户领域服务接口
  */
-public interface UserService {
+public interface UserService extends BaseService<UserQuery, User>{
 
     /**
      * 注册.
