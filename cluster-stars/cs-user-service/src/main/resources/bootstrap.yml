@@ -1,7 +1,76 @@
+#spring:
+#  cloud:
+#    config:
+#      name: cs-user-service
+#      profile: dev
+#      label: master
+#      uri: http://localhost:9966
+server:
+  port: 9002
+sa-token:
+  token-name: csusertoken
+  timeout: 86400
+  activity-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+  is-read-cookie: false
+  is-read-head: true
 spring:
-  cloud:
-    config:
-      name: cs-user-service
-      profile: dev
-      label: master
-      uri: http://localhost:9966
+  application:
+    name: cs-user-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://106.75.66.14:3307/csuser_test?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+    username: CaiYang
+    password: yc1024
+    # type: com.alibaba.druid.pool.DruidDataSource
+    # druid:
+    #   initial-size: 5
+    #   min-idle: 5
+    #   max-active: 20
+    #   max-wait: 60000
+    #   time-between-eviction-runs-millis: 60000
+    #   min-evictable-idle-time-millis: 300000
+    #   validation-query: SELECT 1 FROM DUAL
+    #   test-while-idle: true
+    #   test-on-borrow: false
+    #   test-on-return: false
+    #   pool-prepared-statements: true
+    #   max-pool-prepared-statement-per-connection-size: 20
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+#  redis:
+#    database: 5
+#    host: 106.75.66.14
+#    port: 6379
+#    timeout: 10s
+#    lettuce:
+#      pool:
+#        max-active: 200
+#        max-wait: -1ms
+#        max-idle: 10
+#        min-idle: 0
+mybatis:
+  type-aliases-package: com.mst.csuserservice.domain.model
+  mapper-locations: classpath:mapper/*.xml
+mybatis-plus:
+  type-enums-package: com.mst.csuserservice.domain.enum
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+logging:
+  level:
+    com.mst.csuserservice.domain.mapper: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
