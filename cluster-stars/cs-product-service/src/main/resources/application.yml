@@ -27,17 +27,18 @@ spring:
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-#  redis:
-#    database: 5
-#    host: 106.75.66.14
-#    port: 6379
-#    timeout: 10s
-#    lettuce:
-#      pool:
-#        max-active: 200
-#        max-wait: -1ms
-#        max-idle: 10
-#        min-idle: 0
+  redis:
+    database: 5
+    host: 106.75.66.14
+    port: 6379
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 200
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 0
+    password: cmlwxt1231
 #mybatis:
 #  type-aliases-package: com.mst.csproductservice.domain.model
 #  mapper-locations: classpath:mapper/*.xml
