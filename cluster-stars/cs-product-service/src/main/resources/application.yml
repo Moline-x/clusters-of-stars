@@ -1,0 +1,59 @@
+server:
+  port: 9102
+sa-token:
+  token-name: csusertoken
+  timeout: 86400
+  activity-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+  is-read-cookie: false
+  is-read-head: true
+spring:
+  application:
+    name: cs-product-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://106.75.66.14:3307/csproduct_test?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+    username: molin
+    password: cmlwxt1231
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#  redis:
+#    database: 5
+#    host: 106.75.66.14
+#    port: 6379
+#    timeout: 10s
+#    lettuce:
+#      pool:
+#        max-active: 200
+#        max-wait: -1ms
+#        max-idle: 10
+#        min-idle: 0
+#mybatis:
+#  type-aliases-package: com.mst.csproductservice.domain.model
+#  mapper-locations: classpath:mapper/*.xml
+#mybatis-plus:
+#  type-enums-package: com.mst.csproductservice.domain.enum
+#  configuration:
+#    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+#logging:
+#  level:
+#    com.mst.csproductservice.domain.mapper: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}

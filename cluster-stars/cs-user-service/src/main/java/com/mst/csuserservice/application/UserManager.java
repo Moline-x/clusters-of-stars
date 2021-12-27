@@ -5,16 +5,12 @@ import com.mst.csuserservice.application.dto.UserDTO;
 import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
-import com.mst.csuserservice.domain.factory.UserFactory;
 import com.mst.csuserservice.domain.model.User;
 import com.mst.csuserservice.domain.service.UserService;
 import com.mst.csuserservice.infrastructure.factory.UserBuildFactory;
 import com.mst.csuserservice.infrastructure.factory.UserDtoFactory;
-import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,12 +46,18 @@ public class UserManager {
      * @param  userLoginQuery  login query user
      * @return UserDTO
      */
+    @Transactional(rollbackFor = Exception.class)
     public UserDTO login(HttpServletRequest request, UserLoginQuery userLoginQuery) {
-        // 封装日志.
-        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        userLoginQuery.setLoginLog(new UserBuildFactory().buildLoginLog(httpServletRequest));
+
         // 启动用户领域服务完成登录.
         UserLoginBO userLoginBO = userService.login(userLoginQuery);
+        // 封装日志.
+        userLoginBO.getLoginId().ifPresent(id -> {
+            // 获取权限与角色列表.
+            userLoginBO.setPermissionsList(userService.getPermissionList(id));
+            userLoginBO.setRolesList(userService.getRoleList(id));
+            userService.saveLoginLog(new UserBuildFactory().buildLoginLog(request), id);
+        });
         // 响应登录结果.
         return UserDtoFactory.newUserDtoForLogin(userLoginBO);
     }

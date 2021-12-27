@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-config/cs-config.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-config/cs-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-eureka/cs-eureka.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-eureka/cs-eureka.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-gateway/cs-gateway.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-gateway/cs-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-product-service/cs-product-service.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-product-service/cs-product-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster-stars/cs-user-service/cs-user-service.iml" filepath="$PROJECT_DIR$/cluster-stars/cs-user-service/cs-user-service.iml" />
     </modules>
   </component>

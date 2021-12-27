@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 
 /**
  * @author Molin
@@ -27,13 +29,12 @@ public class UserDtoFactory {
      * @return UserDTO
      */
     public static UserDTO newUserDtoForRegister(final User user) {
+
         UserDTO userDTO = new UserDTO();
-        if (user == null) {
-            userDTO.setMsg(false);
-            return userDTO;
-        }
-        userDTO.setUser(user);
-        userDTO.setMsg(true);
+        Optional.ofNullable(user).ifPresentOrElse(u -> {
+            userDTO.setMsg(true);
+            userDTO.setUser(user);
+        }, () -> userDTO.setMsg(false));
         return userDTO;
     }
 
@@ -43,22 +44,28 @@ public class UserDtoFactory {
      * @return UserDTO
      */
     public static UserDTO newUserDtoForLogin(final UserLoginBO userLoginBO) {
+
         UserDTO userDTO = new UserDTO();
-        SaTokenInfo tokenInfo = userLoginBO.getTokenInfo();
-        if (tokenInfo == null) {
-            userDTO.setMsg(false);
-            return userDTO;
-        }
+        userLoginBO.getTokenInfo().ifPresentOrElse(t -> {
+            userDTO.setMsg(true);
+            userDTO.setTokenMap(createTokenMap(t));
+            userDTO.setPermissions(userLoginBO.getPermissionsList());
+        }, () -> userDTO.setMsg(false));
+        return userDTO;
+    }
+
+    /**
+     * 构建tokenMap工具.
+     * @param  tokenInfo token information
+     * @return token information map
+     */
+    private static Map<String, String> createTokenMap(final SaTokenInfo tokenInfo) {
         String userId = String.valueOf(tokenInfo.getLoginId());
         Map<String, String> tokenMap = new HashMap<>(UserConstant.TOKEN_MAP_CAPACITY);
         tokenMap.put("token", tokenInfo.getTokenValue());
         tokenMap.put("tokenHead", tokenInfo.getTokenName());
         tokenMap.put("loginId", userId);
-        tokenMap.put("openCode", userLoginBO.getOpenCode());
-        userDTO.setTokenMap(tokenMap);
-        userDTO.setMsg(true);
-        userDTO.setPermissions(userLoginBO.getPermissionsList());
-        return userDTO;
+        return tokenMap;
     }
 
     /**
@@ -67,13 +74,12 @@ public class UserDtoFactory {
      * @return UserDTO
      */
     public static UserDTO newUserDtoForLogout(final String loginId) {
+
         UserDTO userDTO = new UserDTO();
-        if (loginId != null) {
-            userDTO.setUser(User.builder().name(loginId).build());
+        Optional.ofNullable(loginId).ifPresentOrElse(l -> {
             userDTO.setMsg(true);
-        } else {
-            userDTO.setMsg(false);
-        }
+            userDTO.setUser(User.builder().name(loginId).build());
+        }, () -> userDTO.setMsg(false));
         return userDTO;
     }
 
@@ -95,14 +101,8 @@ public class UserDtoFactory {
      * @return UserDTO
      */
     public static UserDTO newUserDtoForUpdate(final User user) {
-        UserDTO userDTO = new UserDTO();
-        if (user != null) {
-            userDTO.setUser(user);
-            userDTO.setMsg(true);
-        } else {
-            userDTO.setMsg(false);
-        }
-        return userDTO;
+
+        return newUserDtoForRegister(user);
     }
 
     /**
@@ -111,6 +111,7 @@ public class UserDtoFactory {
      * @return UserDTO
      */
     public static UserDTO newUserDtoForFindOne(final User user) {
+
         return newUserDtoForUpdate(user);
     }
 

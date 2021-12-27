@@ -5,7 +5,9 @@ import com.mst.csuserservice.controller.cqe.command.UserCreateCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUnBindCommand;
 import com.mst.csuserservice.controller.cqe.command.UserUpdateCommand;
 import com.mst.csuserservice.controller.cqe.query.UserLoginQuery;
+import com.mst.csuserservice.controller.cqe.query.UserQuery;
 import com.mst.csuserservice.domain.bo.UserLoginBO;
+import com.mst.csuserservice.domain.model.LoginLog;
 import com.mst.csuserservice.domain.model.User;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
  * @date   2021-11-19  22:45
  * 用户领域服务接口
  */
-public interface UserService {
+public interface UserService extends BaseService<UserQuery, User>{
 
     /**
      * 注册.
@@ -30,6 +32,27 @@ public interface UserService {
      * @return  SaTokenInfo
      */
     UserLoginBO login(UserLoginQuery userLoginQuery);
+
+    /**
+     * 保存登录日志.
+     * @param  loginLog login log
+     * @param  userId   user id
+     */
+    void saveLoginLog(LoginLog loginLog, Long userId);
+
+    /**
+     * 获取权限列表.
+     * @param  userId user id
+     * @return permission list
+     */
+    List<String> getPermissionList(Long userId);
+
+    /**
+     * 获取角色列表.
+     * @param  userId user id
+     * @return role list
+     */
+    List<String> getRoleList(Long userId);
 
     /**
      * 后台创建用户.
