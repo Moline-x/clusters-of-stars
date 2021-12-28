@@ -19,7 +19,7 @@ public class ProductController {
      * 测试用户与商品中心连通性接口.
      * @return target string
      */
-    @SaCheckPermission(value = "user-get")
+    @SaCheckPermission(value = "user-add")
     @GetMapping("/testAction")
     public String testAction() {
        if (StpUtil.isLogin()) {
