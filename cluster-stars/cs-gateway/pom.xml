@@ -39,6 +39,38 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <!-- Sa-Token 权限认证（Reactor响应式集成） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+            <version>1.28.0</version>
+        </dependency>
+        <!-- Sa-Token 整合 Redis (使用jackson序列化方式) -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis-jackson</artifactId>
+            <version>1.28.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.37</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -46,39 +78,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.0.0</version>
                 <configuration>
-                    <!--镜像名称 -->
-                    <imageName>cs/${project.artifactId}</imageName>
-                    <!--标签版本-->
-                    <imageTags>
-                        <imageTag>latest</imageTag>
-                    </imageTags>
-                    <!--基础镜像，相当于Dockerfile里的from-->
-                    <baseImage>adoptopenjdk/openjdk11-openj9:alpine-slim</baseImage>
-                    <!--签名（作者）-->
-                    <maintainer>molineting1231@gmail.com</maintainer>
-                    <!--入口点，project.build.finalName就是project标签下的build标签下的filename标签内容，test-docker-demo-->
-                    <!--相当于启动容器后，会自动执行java -jar/xxx.jar-->
-                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-                    <!--docker地址-->
-                    <dockerHost>http://106.75.66.14:2375</dockerHost>
-
-                    <!-- 这里是复制 jar 包到 docker 容器指定目录配置 -->
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <!--复制的根目录，target-->
-                            <directory>${project.build.directory}</directory>
-                            <!--把哪个文件上传到docker，相当于Dockerfile里的add xxx.jar /-->
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
