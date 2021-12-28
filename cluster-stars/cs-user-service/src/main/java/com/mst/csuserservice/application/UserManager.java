@@ -55,7 +55,9 @@ public class UserManager {
         userLoginBO.getLoginId().ifPresent(id -> {
             // 获取权限与角色列表.
             userLoginBO.setPermissionsList(userService.getPermissionList(id));
+            StpUtil.getSessionByLoginId(id).set("Permissions", userLoginBO.getPermissionsList());
             userLoginBO.setRolesList(userService.getRoleList(id));
+            StpUtil.getSessionByLoginId(id).set("Roles", userLoginBO.getRolesList());
             userService.saveLoginLog(new UserBuildFactory().buildLoginLog(request), id);
         });
         // 响应登录结果.
