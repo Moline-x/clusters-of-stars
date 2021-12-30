@@ -3,6 +3,7 @@ package com.mst.csgateway.service;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpUtil;
+import com.mst.csgateway.constant.AuthConstant;
 import com.mst.csgateway.mapper.PermissionMapper;
 import com.mst.csgateway.mapper.RoleMapper;
 import com.mst.csgateway.utils.CastUtil;
@@ -37,9 +38,9 @@ public class UserGetPermission implements StpInterface {
     public List<String> getPermissionList(Object loginId, String s) {
 
         SaSession session = StpUtil.getSessionByLoginId(loginId);
-        Object permissions = session.get("Permissions", () -> {
+        Object permissions = session.get(AuthConstant.PERMISSIONS_KEY, () -> {
             List<String> list = permissionMapper.findPermissionsByUserId(Long.valueOf(loginId.toString()));
-            session.set("Permissions", list);
+            session.set(AuthConstant.PERMISSIONS_KEY, list);
             return list;
         });
         return new ArrayList<>(CastUtil.castList(permissions, String.class));
@@ -55,9 +56,9 @@ public class UserGetPermission implements StpInterface {
     public List<String> getRoleList(Object loginId, String s) {
 
         SaSession session = StpUtil.getSessionByLoginId(loginId);
-        Object roles = session.get("Roles", () -> {
+        Object roles = session.get(AuthConstant.ROLES_KEY, () -> {
             List<String> list = roleMapper.findRolesByUserId(Long.valueOf(loginId.toString()));
-            session.set("Roles", list);
+            session.set(AuthConstant.ROLES_KEY, list);
             return list;
         });
         return new ArrayList<>(CastUtil.castList(roles, String.class));
