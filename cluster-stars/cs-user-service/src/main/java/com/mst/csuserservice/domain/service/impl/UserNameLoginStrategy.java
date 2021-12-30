@@ -32,14 +32,8 @@ public class UserNameLoginStrategy implements UserLoginStrategy {
     public Optional<Long> findUser(String loginText, String password) {
         // 根据用户名和密码查询用户.
         Optional<User> userOptional = userRepository.findByNameAndPassword(loginText, password);
-        // 如果查到了，则将当前loginType更新到Account表.
-        if (userOptional.isPresent()) {
-            // 获取当前用户实体
-            User user = userOptional.get();
-            // 返回用户id
-            return Optional.of(user.getId());
-        }
-        return Optional.empty();
+        // 如果查到了，则返回用户id.
+        return userOptional.map(User::getId);
     }
 
     /**
@@ -55,12 +49,10 @@ public class UserNameLoginStrategy implements UserLoginStrategy {
         // 根据userId查找账户.
         Optional<Account> accountOptional = userRepository.findByUserId(userId);
         // 如果查到了,则将当前loginType更新到Account表.
-        if (accountOptional.isPresent()) {
+        return accountOptional.flatMap(account -> {
             // 更新登录类型
             userRepository.updateLoginType(userId, loginType);
-            // 返回账户.
             return accountOptional;
-        }
-        return Optional.empty();
+        });
     }
 }

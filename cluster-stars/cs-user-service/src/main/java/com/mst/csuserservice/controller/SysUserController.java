@@ -1,6 +1,5 @@
 package com.mst.csuserservice.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.mst.csuserservice.application.SysUserManager;
 import com.mst.csuserservice.application.UserManager;
 import com.mst.csuserservice.application.dto.UserDTO;
@@ -58,7 +57,6 @@ public class SysUserController {
      * @param  userCreateCommand  create user command
      * @return ResultVO<UserDTO>
      */
-    @SaCheckPermission(value = "user-add", orRole = {"super-admin","admin"})
     @PostMapping("/create")
     public ResultVO<UserDTO> createUser(@RequestBody UserCreateCommand userCreateCommand) {
         // 启动应用层构建用户指令.
@@ -72,7 +70,6 @@ public class SysUserController {
      * @param  userUnBindCommand  user unBind command
      * @return ResultVO<UserDTO>
      */
-    @SaCheckPermission(value = "user-delete", orRole = {"super-admin","admin"})
     @PostMapping("/remove")
     public ResultVO<UserDTO> removeUser(@RequestBody UserUnBindCommand userUnBindCommand) {
         // 启动应用层删除用户指令.
@@ -86,7 +83,6 @@ public class SysUserController {
      * @param  userUpdateCommand  user update command
      * @return ResultVO<UserDTO>
      */
-    @SaCheckPermission(value = "user-update", orRole = {"super-admin","admin"})
     @PostMapping("/update")
     public ResultVO<UserDTO> updateUser(@RequestBody UserUpdateCommand userUpdateCommand) {
         // 启动应用层更新用户指令.
@@ -100,7 +96,6 @@ public class SysUserController {
      * @param  id user id
      * @return ResultVO<UserDTO>
      */
-    @SaCheckPermission(value = "user-get", orRole = {"super-admin","admin"})
     @GetMapping("/get/{id}")
     public ResultVO<UserDTO> getOneUser(@PathVariable("id") Long id) {
         // 启动应用层获取单个用户信息.
@@ -114,7 +109,6 @@ public class SysUserController {
      * @param  userQuery user query parameter
      * @return ResultVO<UserDTO>
      */
-    @SaCheckPermission(value = "user-get", orRole = {"super-admin","admin"})
     @PostMapping("/getPage")
     public ResultVO<UserDTO> findAllUsersByPage(@RequestBody PageParam<UserQuery> userQuery) {
         // 启动应用层获取全部用户信息.

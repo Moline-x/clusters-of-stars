@@ -130,4 +130,12 @@ public final class UserConstant {
      * 后台查询单个用户失败提示语.
      */
     public static final String USER_FOUND_FAILED = "查询用户失败";
+    /**
+     * 权限key.
+     */
+    public static final String PERMISSIONS_KEY = "Permissions";
+    /**
+     * 角色key.
+     */
+    public static final String ROLES_KEY = "Roles";
 }
